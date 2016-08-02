@@ -1,13 +1,13 @@
 class Lin
-  attr_reader :position, :direction, :speed, :split, :merge, :char
+  attr_reader :position, :direction, :speed, :split, :merge, :random
 
   def initialize
     @position = 0
     @direction = 1
     @speed = 1
-    @split = 0.05
+    @split = 0.01
     @merge = 0.25
-    @char = '1'
+    @random = Random.new
   end
 
   def move
@@ -17,16 +17,35 @@ class Lin
   def bounce
     @direction = -direction
   end
+
+  def split?
+    random.rand < split
+  end
+
+  def merge?
+    random.rand < merge
+  end
+
+  # next generation of lin(s)
+  def next_gin
+    if split?
+      bounced = dup
+      bounced.bounce
+      [self, bounced]
+    else
+      [self]
+    end
+  end
 end
 
 class Row
-  attr_reader :lin_map, :char, :size, :last_index
+  attr_reader :lins, :lin_positions, :size, :last_index
   def initialize lins, size
-    @char = '0'
     @size = size
     @last_index = size - 1
-    @lin_map = lins.each_with_object({}) do |lin, obj|
-      obj[move(lin)] = lin
+    @lins = lins
+    @lin_positions = lins.inject({}) do |hash, lin|
+      hash.merge(move(lin) => true)
     end
   end
 
@@ -44,17 +63,9 @@ class Row
     end
   end
 
-  def char_at position
-    if lin = lin_map[position]
-      lin.char
-    else
-      char
-    end
-  end
-
   def display
     puts size.times.inject('') { |row, i|
-      row + char_at(i)
+      row + (lin_positions[i] ? '1' : '0')
     }
   end
 end
@@ -62,7 +73,7 @@ end
 class Linfinity
   attr_reader :delay, :size
 
-  def initialize opts = {delay: 0.1, size: 40}
+  def initialize opts = {delay: 0.1, size: 157}
     @delay = opts[:delay]
     @size = opts[:size]
   end
@@ -71,7 +82,7 @@ class Linfinity
     loop.inject([Lin.new]) do |lins, _|
       Row.new(lins, size).display
       sleep delay
-      lins
+      lins.map(&:next_gin).flatten
     end
   end
 end
