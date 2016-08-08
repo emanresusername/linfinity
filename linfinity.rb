@@ -26,6 +26,15 @@ class Lin
     random.rand < merge
   end
 
+  def bounced_or_merged
+    if merge?
+      nil
+    else
+      bounce
+      self
+    end
+  end
+
   # next generation of lin(s)
   def next_gin
     if split?
@@ -44,8 +53,8 @@ class Row
     @size = size
     @last_index = size - 1
     @lins = lins
-    @lin_positions = lins.inject({}) do |hash, lin|
-      hash.merge(move(lin) => true)
+    @lin_positions = lins.each_with_object(Hash.new { |h,k| h[k] = []}) do |lin, hash|
+      hash[move(lin)] << lin
     end
   end
 
@@ -65,7 +74,22 @@ class Row
 
   def display
     puts size.times.inject('') { |row, i|
-      row + (lin_positions[i] ? '1' : '0')
+      row + (lin_positions[i].any? ? '1' : '0')
+    }
+  end
+
+  def collide_lins
+    lin_positions.flat_map { |pos, lins|
+      case lins.size
+      when 0
+        []
+      when 1
+        lins.take(1)
+      else
+        lins.each_cons(2).flat_map { |pair|
+          pair.map(&:bounced_or_merged).compact
+        }
+      end
     }
   end
 end
@@ -80,9 +104,10 @@ class Linfinity
 
   def run
     loop.inject([Lin.new]) do |lins, _|
-      Row.new(lins, size).display
+      row = Row.new(lins, size)
+      row.display
       sleep delay
-      lins.map(&:next_gin).flatten
+      row.collide_lins.map(&:next_gin).flatten
     end
   end
 end
