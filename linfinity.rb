@@ -1,3 +1,5 @@
+require 'colorize'
+
 class Lin
   attr_reader :position, :direction, :speed, :split_chance,
               :merge_chance, :random, :char, :mutate_chance
@@ -10,7 +12,7 @@ class Lin
 
   def mutate
     @random = Random.new
-    @char = random.rand(36).to_s(36)
+    @char = random.rand(36).to_s(36).colorize(String.colors.sample)
     @speed = 1
     @split_chance = 0.01
     @merge_chance = 0.25
