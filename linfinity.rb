@@ -1,13 +1,20 @@
 class Lin
-  attr_reader :position, :direction, :speed, :split, :merge, :random
+  attr_reader :position, :direction, :speed, :split_chance,
+              :merge_chance, :random, :char, :mutate_chance
 
   def initialize
     @position = 0
     @direction = 1
-    @speed = 1
-    @split = 0.01
-    @merge = 0.25
+    mutate
+  end
+
+  def mutate
     @random = Random.new
+    @char = random.rand(36).to_s(36)
+    @speed = 1
+    @split_chance = 0.01
+    @merge_chance = 0.25
+    @mutate_chance = 0.25
   end
 
   def move
@@ -19,11 +26,15 @@ class Lin
   end
 
   def split?
-    random.rand < split
+    random.rand < split_chance
   end
 
   def merge?
-    random.rand < merge
+    random.rand < merge_chance
+  end
+
+  def mutate?
+    random.rand < mutate_chance
   end
 
   def bounced_or_merged
@@ -39,6 +50,7 @@ class Lin
   def next_gin
     if split?
       bounced = dup
+      bounced.mutate if mutate?
       bounced.bounce
       [self, bounced]
     else
@@ -74,7 +86,14 @@ class Row
 
   def display
     size.times.inject('') do |row, i|
-      row + (lin_positions[i].any? ? '1' : '0')
+      row + case (lins = lin_positions[i]).size
+            when 0
+              ' '
+            when 1
+              lins.first.char
+            else
+              '#'
+      end
     end
   end
 
