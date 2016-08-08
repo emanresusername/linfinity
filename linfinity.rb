@@ -49,16 +49,16 @@ end
 
 class Row
   attr_reader :lins, :lin_positions, :size, :last_index
-  def initialize lins, size
+  def initialize(lins, size)
     @size = size
     @last_index = size - 1
     @lins = lins
-    @lin_positions = lins.each_with_object(Hash.new { |h,k| h[k] = []}) do |lin, hash|
+    @lin_positions = lins.each_with_object(Hash.new { |h, k| h[k] = [] }) do |lin, hash|
       hash[move(lin)] << lin
     end
   end
 
-  def move lin
+  def move(lin)
     lin.move
     pos = lin.position
     if pos >= last_index
@@ -79,25 +79,25 @@ class Row
   end
 
   def collide_lins
-    lin_positions.flat_map { |pos, lins|
+    lin_positions.flat_map do |_pos, lins|
       case lins.size
       when 0
         []
       when 1
         lins.take(1)
       else
-        lins.each_cons(2).flat_map { |pair|
+        lins.each_cons(2).flat_map do |pair|
           pair.map(&:bounced_or_merged).compact
-        }
+        end
       end
-    }
+    end
   end
 end
 
 class Linfinity
   attr_reader :delay, :size
 
-  def initialize opts = {delay: 0.1, size: 157}
+  def initialize(opts = { delay: 0.1, size: 157 })
     @delay = opts[:delay]
     @size = opts[:size]
   end
