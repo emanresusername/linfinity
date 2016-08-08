@@ -73,18 +73,15 @@ class Row
   end
 
   def display
-    puts size.times.inject('') { |row, i|
+    size.times.inject('') do |row, i|
       row + (lin_positions[i].any? ? '1' : '0')
-    }
+    end
   end
 
   def collide_lins
     lin_positions.flat_map do |_pos, lins|
-      case lins.size
-      when 0
-        []
-      when 1
-        lins.take(1)
+      if lins.size < 2
+        lins
       else
         lins.each_cons(2).flat_map do |pair|
           pair.map(&:bounced_or_merged).compact
@@ -95,19 +92,22 @@ class Row
 end
 
 class Linfinity
-  attr_reader :delay, :size
+  attr_reader :delay, :size, :io
 
-  def initialize(opts = { delay: 0.1, size: 157 })
-    @delay = opts[:delay]
-    @size = opts[:size]
+  def initialize(delay: 0.1, size: 157, output: nil)
+    @io = output ? open(output, 'w') : STDOUT
+    @delay = delay
+    @size = size
   end
 
   def run
     loop.inject([Lin.new]) do |lins, _|
+      break unless lins.any?
       row = Row.new(lins, size)
-      row.display
-      sleep delay
+      io.puts row.display
+      sleep delay if io == STDOUT
       row.collide_lins.map(&:next_gin).flatten
     end
+    io.flush
   end
 end
