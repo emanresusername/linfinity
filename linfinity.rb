@@ -4,9 +4,9 @@ class Lin
   attr_reader :position, :direction, :speed, :split_chance,
               :merge_chance, :random, :char, :mutate_chance
 
-  def initialize
-    @position = 0
-    @direction = 1
+  def initialize(position: 0, direction: 1)
+    @position = position
+    @direction = direction
     mutate
   end
 
@@ -115,7 +115,15 @@ end
 class Linfinity
   attr_reader :delay, :size, :io
 
-  def initialize(delay: 0.1, size: 157, output: nil)
+  # Get the current width of the terminal
+  #
+  # @return [Integer] number of columns
+  def terminal_width
+    guess = `tput cols`.to_i
+    guess.zero? ? 80 : guess
+  end
+
+  def initialize(delay: 0.1, size: terminal_width, output: nil, lins: 1)
     @io = output ? open(output, 'w') : STDOUT
     @delay = delay
     @size = size
