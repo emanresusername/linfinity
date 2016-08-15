@@ -1,20 +1,3 @@
-// https://gist.github.com/littlefolk/788723
-// https://developer.mozilla.org/ja/New_in_JavaScript_1.7#Array_comprehensions
-function range(begin, end) {
-    let arr = [];
-    for (let i = begin; i < end; ++i) {
-        arr.push(i);
-    }
-    return arr;
-};
-
-// http://code.activestate.com/recipes/347689-ruby-arrayeach_cons-each_slice-overlapping-and-non/
-function each_cons(l, n) {
-    return [
-        for (i of(range(0, l.length - n + 1))) l.slice(i, i + n)
-    ];
-};
-
 function randomIndex(length) {
     return Math.floor(Math.random() * length);
 }
@@ -142,11 +125,9 @@ class Row {
             if (lins.length < 2) {
                 collidedLins = collidedLins.concat(lins);
             } else {
-                for (let pair of each_cons(lins, 2)) {
-                    let collidedPair = lins.map(lin => lin.bouncedOrMerged())
-                        .filter(lin => lin != null);
-                    collidedLins = collidedLins.concat(collidedPair);
-                }
+                let collidedAtPos = lins.map(lin => lin.bouncedOrMerged())
+                    .filter(lin => lin != null);
+                collidedLins = collidedLins.concat(collidedAtPos);
             }
         }
         return collidedLins;
@@ -155,10 +136,10 @@ class Row {
 
 class Linfinity {
     constructor({
-        delay= 1000,
-        rowWidth= 15,
-        initialLins= 2,
-        blankChar = ' '
+        delay = 100,
+        rowWidth = 50,
+        initialLins = 3,
+        blankChar = '_'
     }) {
         this.delay = delay;
         this.rowWidth = rowWidth;
@@ -171,11 +152,10 @@ class Linfinity {
             this.stop();
         }
 
-        let rowWidth = this.rowWidth;
         let lins = [];
         for (let i = 0; i < this.initialLins; ++i) {
             let lin = new Lin({
-                position: randomIndex(rowWidth),
+                position: randomIndex(this.rowWidth),
                 direction: (Math.random() < 0.5 ? 1 : -1)
             });
             lin.mutate();
@@ -185,7 +165,7 @@ class Linfinity {
             if (lins.length < 1) {
                 this.stop();
             } else {
-                let row = new Row(lins, rowWidth, this.blankChar);
+                let row = new Row(lins, this.rowWidth, this.blankChar);
                 displayCallback(row.display());
                 lins = [].concat.apply([],
                     row.collideLins().map(lin => lin.nextGin()));
@@ -197,11 +177,14 @@ class Linfinity {
         clearInterval(this.interval);
     }
 
-    domDisplayCallback(container) {
+    domDisplayCallback(container, height = 10) {
         return (innerHTML) => {
             let displayElement = document.createElement('p');
             displayElement.innerHTML = `<pre>${innerHTML}</pre>`;
             container.appendChild(displayElement);
+            if (container.children.length > height) {
+                container.firstElementChild.remove();
+            }
         };
     }
 }
