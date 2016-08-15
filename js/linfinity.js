@@ -127,7 +127,7 @@ class Row {
                     rowHtml += this.settings.collideChar;
                 } else if (lins.length == 1) {
                     let lin = lins[0];
-                    rowHtml += `<font style="color: ${lin.color};">${lin.char}</font>`;
+                    rowHtml += `<span style="color: ${lin.color};">${lin.char}</span>`;
                 }
             } else {
                 rowHtml += this.settings.blankChar;
