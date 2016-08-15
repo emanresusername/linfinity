@@ -1,11 +1,11 @@
 const DEFAULT_SETTINGS = {
-    width: 50,
-    height: 20,
+    width: 40,
+    height: 13,
     delay: 100,
     blankChar: '_',
     collideChar: '#',
-    splitChance: 0.02,
-    mergeChance: 0.25,
+    splitChance: 0.01,
+    mergeChance: 0.35,
     mutateChance: 0.25,
     dieChance: 0.001,
     linChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
@@ -23,16 +23,8 @@ function randomHexColor() {
 }
 
 class Lin {
-    constructor({
-        direction,
-        position,
-        settings
-    }) {
-        Object.assign(this, {
-            direction,
-            position,
-            settings
-        });
+    constructor(properties) {
+        Object.assign(this, properties);
     }
 
     mutate() {
