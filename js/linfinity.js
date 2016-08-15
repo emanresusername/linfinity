@@ -1,3 +1,16 @@
+const DEFAULT_SETTINGS = {
+    width: 50,
+    height: 20,
+    delay: 100,
+    blankChar: '_',
+    collideChar: '#',
+    splitChance: 0.01,
+    mergeChance: 0.25,
+    mutateChance: 0.25,
+    linChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+    beyondMessage: "...AND BEYOND!!!"
+};
+
 function randomIndex(length) {
     return Math.floor(Math.random() * length);
 }
@@ -9,21 +22,27 @@ function randomHexColor() {
 }
 
 class Lin {
-    static chars() {
-        return "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    }
-
-    constructor(properties) {
-        Object.assign(this, properties);
+    constructor({
+        direction,
+        position,
+        settings
+    }) {
+        Object.assign(this, {
+            direction,
+            position,
+            settings
+        });
     }
 
     mutate() {
-        this.char = Lin.chars().charAt(randomIndex(Lin.chars().length));
-        this.color = randomHexColor();
-        this.speed = 1;
-        this.splitChance = 0.01;
-        this.mergeChance = 0.25;
-        this.mutateChance = 0.25;
+        let {
+            linChars
+        } = this.settings;
+        Object.assign(this, {
+            char: linChars.charAt(randomIndex(linChars.length)),
+            color: randomHexColor(),
+            speed: 1
+        });
     }
 
     move() {
@@ -35,15 +54,15 @@ class Lin {
     }
 
     shouldSplit() {
-        return Math.random() < this.splitChance;
+        return Math.random() < this.settings.splitChance;
     }
 
     shouldMerge() {
-        return Math.random() < this.mergeChance;
+        return Math.random() < this.settings.mergeChance;
     }
 
     shouldMutate() {
-        return Math.random() < this.mutateChance;
+        return Math.random() < this.settings.mutateChance;
     }
 
     bouncedOrMerged() {
@@ -71,11 +90,9 @@ class Lin {
 }
 
 class Row {
-    constructor(lins, size, blankChar = ' ') {
-        this.size = size;
-        this.last_index = size - 1;
+    constructor(lins, settings) {
         this.lins = lins;
-        this.blankChar = blankChar;
+        this.settings = settings;
         let lin_positions = this.lin_positions = new Map();
         lins.forEach((lin) => {
             let pos = this.move(lin);
@@ -90,9 +107,10 @@ class Row {
     move(lin) {
         lin.move();
         let pos = lin.position;
-        if (pos >= this.last_index) {
+        let last_index = this.settings.width - 1;
+        if (pos >= last_index) {
             lin.bounce();
-            return lin.position = this.last_index;
+            return lin.position = last_index;
         } else if (pos < 1) {
             lin.bounce();
             return lin.position = 0;
@@ -103,17 +121,17 @@ class Row {
 
     display() {
         let rowHtml = '';
-        for (let i = 0; i < this.size; ++i) {
+        for (let i = 0; i < this.settings.width; ++i) {
             if (this.lin_positions.has(i)) {
                 let lins = this.lin_positions.get(i);
                 if (lins.length > 1) {
-                    rowHtml += '#';
+                    rowHtml += this.settings.collideChar;
                 } else if (lins.length == 1) {
                     let lin = lins[0];
                     rowHtml += `<font style="color: ${lin.color};">${lin.char}</font>`;
                 }
             } else {
-                rowHtml += this.blankChar;
+                rowHtml += this.settings.blankChar;
             }
         }
         return rowHtml;
@@ -135,56 +153,63 @@ class Row {
 }
 
 class Linfinity {
-    constructor({
-        delay = 100,
-        rowWidth = 50,
-        initialLins = 3,
-        blankChar = '_'
-    }) {
-        this.delay = delay;
-        this.rowWidth = rowWidth;
-        this.initialLins = initialLins;
-        this.blankChar = blankChar;
+    constructor(initialNumLins, settings) {
+        this.settings = settings;
+        this.resetLins(initialNumLins);
     }
 
-    run(displayCallback) {
-        if (this.interval) {
-            this.stop();
-        }
-
-        let lins = [];
-        for (let i = 0; i < this.initialLins; ++i) {
+    resetLins(numLins) {
+        let lins = this.lins = [];
+        for (let i = 0; i < numLins; ++i) {
             let lin = new Lin({
-                position: randomIndex(this.rowWidth),
-                direction: (Math.random() < 0.5 ? 1 : -1)
+                position: randomIndex(this.settings.width),
+                direction: (Math.random() < 0.5 ? 1 : -1),
+                settings: this.settings
             });
             lin.mutate();
             lins.push(lin);
         }
-        this.interval = setInterval(() => {
-            if (lins.length < 1) {
-                this.stop();
-            } else {
-                let row = new Row(lins, this.rowWidth, this.blankChar);
-                displayCallback(row.display());
-                lins = [].concat.apply([],
-                    row.collideLins().map(lin => lin.nextGin()));
+    }
+
+    run(displayCallback) {
+        if (this.lins.length < 1) {
+            this.stop();
+            this.displayBeyond(displayCallback);
+        } else {
+            let row = new Row(this.lins, this.settings);
+            displayCallback(row.display(), this.settings);
+            this.lins = [].concat.apply([],
+                row.collideLins().map(lin => lin.nextGin()));
+            this.timeout = setTimeout(
+                () => this.run(displayCallback),
+                this.settings.delay
+            );
+        }
+    }
+
+    displayBeyond(displayCallback) {
+        let {beyondMessage, width} = this.settings;
+        for(let char of beyondMessage) {
+            let string = '';
+            for(let i = 0; i < width; ++i) {
+                string += char;
             }
-        }, this.delay);
+            displayCallback(string, this.settings);
+        }
     }
 
     stop() {
-        clearInterval(this.interval);
+        clearTimeout(this.timeout);
     }
+}
 
-    domDisplayCallback(container, height = 10) {
-        return (innerHTML) => {
-            let displayElement = document.createElement('p');
-            displayElement.innerHTML = `<pre>${innerHTML}</pre>`;
-            container.appendChild(displayElement);
-            if (container.children.length > height) {
-                container.firstElementChild.remove();
-            }
-        };
-    }
+function domDisplayCallback(container) {
+    return (innerHTML, settings) => {
+        let displayElement = document.createElement('p');
+        displayElement.innerHTML = `<pre>${innerHTML}</pre>`;
+        container.appendChild(displayElement);
+        if (container.children.length > settings.height) {
+            container.firstElementChild.remove();
+        }
+    };
 }
