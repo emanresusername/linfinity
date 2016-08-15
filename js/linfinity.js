@@ -195,14 +195,25 @@ class Linfinity {
     }
 
     displayBeyond(displayCallback) {
-        let {beyondMessage, width} = this.settings;
-        for(let char of beyondMessage) {
-            let string = '';
-            for(let i = 0; i < width; ++i) {
-                string += char;
+        let c = 0;
+        let displayRowAndQueueNext = () => {
+            if (c >= this.settings.beyondMessage.length) {
+                this.stop();
+            } else {
+                let char = this.settings.beyondMessage.charAt(c);
+                let string = '';
+                for (let i = 0; i < this.settings.width; ++i) {
+                    string += char;
+                }
+                displayCallback(string, this.settings);
+                ++c;
+                this.timeout = setTimeout(
+                    displayRowAndQueueNext,
+                    this.settings.delay * 3
+                );
             }
-            displayCallback(string, this.settings);
-        }
+        };
+        displayRowAndQueueNext();
     }
 
     stop() {
