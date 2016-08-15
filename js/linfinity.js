@@ -92,10 +92,10 @@ class Row {
         let pos = lin.position;
         if (pos >= this.last_index) {
             lin.bounce();
-            return this.last_index;
+            return lin.position = this.last_index;
         } else if (pos < 1) {
             lin.bounce();
-            return 0;
+            return lin.position = 0;
         } else {
             return pos;
         }
