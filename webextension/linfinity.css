@@ -1,0 +1,11 @@
+#settings form div {
+  padding-top: 5px;
+}
+
+#settings form div input {
+  border-radius: 5px;
+}
+
+#linfinity .panel {
+  display: inline-block;
+}
