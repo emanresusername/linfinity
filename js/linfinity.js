@@ -4,9 +4,10 @@ const DEFAULT_SETTINGS = {
     delay: 100,
     blankChar: '_',
     collideChar: '#',
-    splitChance: 0.01,
+    splitChance: 0.02,
     mergeChance: 0.25,
     mutateChance: 0.25,
+    dieChance: 0.001,
     linChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
     beyondMessage: "...AND BEYOND!!!"
 };
@@ -65,6 +66,10 @@ class Lin {
         return Math.random() < this.settings.mutateChance;
     }
 
+    shouldDie() {
+        return Math.random() < this.settings.dieChance;
+    }
+
     bouncedOrMerged() {
         if (this.shouldMerge()) {
             return null;
@@ -83,6 +88,8 @@ class Lin {
             }
             bounced.bounce();
             return [this, bounced];
+        } else if (this.shouldDie()) {
+            return [];
         } else {
             return [this];
         }
