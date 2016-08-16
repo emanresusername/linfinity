@@ -9,3 +9,10 @@
 #linfinity .panel {
   display: inline-block;
 }
+
+#displayScrollPane {
+  overflow-y: hidden;
+  height: 20em;
+  position: absolute;
+  resize: vertical;
+}

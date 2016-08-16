@@ -1,6 +1,6 @@
 const DEFAULT_SETTINGS = {
     width: 40,
-    height: 13,
+    height: 9999999999999,
     delay: 100,
     blankChar: '_',
     collideChar: '#',
@@ -41,6 +41,7 @@ document.getElementById('resetLins').addEventListener('click', function(e) {
     resetLins(LINFINITY);
 });
 
+const SCROLL_PANE = document.getElementById('displayScrollPane');
 function displayCallback(innerHTML, settings) {
     let container = document.getElementById('display');
     let displayElement = document.createElement('p');
@@ -49,6 +50,7 @@ function displayCallback(innerHTML, settings) {
     while (container.children.length > settings.height) {
         container.firstElementChild.remove();
     }
+    SCROLL_PANE.scrollTop = SCROLL_PANE.scrollHeight;
 }
 
 START_STOP_BUTTON.addEventListener('click', function(e) {
@@ -61,3 +63,9 @@ START_STOP_BUTTON.addEventListener('click', function(e) {
         linfinityStopped(LINFINITY);
     }
 });
+
+const SETTINGS_PANEL = document.getElementById('settings');
+function resizeDisplayScrollPane() {
+    let settingsHeight = SETTINGS_PANEL.clientHeight;
+    SCROLL_PANE.style.height = settingsHeight;
+}
