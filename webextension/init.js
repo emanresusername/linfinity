@@ -46,7 +46,7 @@ function displayCallback(innerHTML, settings) {
     let displayElement = document.createElement('p');
     displayElement.innerHTML = `<pre>${innerHTML}</pre>`;
     container.appendChild(displayElement);
-    if (container.children.length > settings.height) {
+    while (container.children.length > settings.height) {
         container.firstElementChild.remove();
     }
 }
