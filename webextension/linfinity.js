@@ -1,17 +1,3 @@
-const DEFAULT_SETTINGS = {
-    width: 40,
-    height: 13,
-    delay: 100,
-    blankChar: '_',
-    collideChar: '#',
-    splitChance: 0.01,
-    mergeChance: 0.35,
-    mutateChance: 0.25,
-    dieChance: 0.001,
-    linChars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
-    beyondMessage: "...AND BEYOND!!!"
-};
-
 function randomIndex(length) {
     return Math.floor(Math.random() * length);
 }
@@ -152,9 +138,9 @@ class Row {
 }
 
 class Linfinity {
-    constructor(initialNumLins, settings) {
-        this.settings = settings;
-        this.resetLins(initialNumLins);
+    constructor(settings) {
+        this.settings = Object.assign({}, settings);
+        this.resetLins(this.settings.initialNumLins);
     }
 
     resetLins(numLins) {
@@ -211,15 +197,4 @@ class Linfinity {
     stop() {
         clearTimeout(this.timeout);
     }
-}
-
-function domDisplayCallback(container) {
-    return (innerHTML, settings) => {
-        let displayElement = document.createElement('p');
-        displayElement.innerHTML = `<pre>${innerHTML}</pre>`;
-        container.appendChild(displayElement);
-        if (container.children.length > settings.height) {
-            container.firstElementChild.remove();
-        }
-    };
 }
