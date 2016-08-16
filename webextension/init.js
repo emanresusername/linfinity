@@ -13,7 +13,21 @@ const DEFAULT_SETTINGS = {
     initialNumLins: 4
 };
 
-const LINFINITY = new Linfinity(DEFAULT_SETTINGS);
+const START_STOP_BUTTON = document.getElementById('startStop');
+
+function resetLins(linfinity) {
+    linfinity.resetLins(linfinity.settings.initialNumLins);
+}
+
+function linfinityStopped(linfinity) {
+    START_STOP_BUTTON.started = false;
+    START_STOP_BUTTON.value = "Start";
+    if(linfinity.isBeyond) {
+        resetLins(linfinity);
+    }
+}
+
+const LINFINITY = new Linfinity(DEFAULT_SETTINGS, linfinityStopped);
 
 for (elem of document.querySelectorAll(".setting-input")) {
     let key = elem.id;
@@ -24,7 +38,7 @@ for (elem of document.querySelectorAll(".setting-input")) {
 }
 
 document.getElementById('resetLins').addEventListener('click', function(e) {
-    LINFINITY.resetLins(LINFINITY.settings.initialNumLins);
+    resetLins(LINFINITY);
 });
 
 function displayCallback(innerHTML, settings) {
@@ -37,13 +51,13 @@ function displayCallback(innerHTML, settings) {
     }
 }
 
-document.getElementById('startStop').addEventListener('click', function(e) {
+START_STOP_BUTTON.addEventListener('click', function(e) {
     this.started = !this.started;
     if (this.started) {
-        this.value = "Stop";
         LINFINITY.run(displayCallback);
+        this.value = "Stop";
     } else {
-        this.value = "Start";
         LINFINITY.stop();
+        linfinityStopped(LINFINITY);
     }
 });

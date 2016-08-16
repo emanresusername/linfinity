@@ -138,9 +138,14 @@ class Row {
 }
 
 class Linfinity {
-    constructor(settings) {
+    constructor(settings, stoppedCallback) {
         this.settings = Object.assign({}, settings);
         this.resetLins(this.settings.initialNumLins);
+        this.stoppedCallback = stoppedCallback;
+    }
+
+    get isBeyond() {
+        return this.lins.length < 1;
     }
 
     resetLins(numLins) {
@@ -157,8 +162,7 @@ class Linfinity {
     }
 
     run(displayCallback) {
-        if (this.lins.length < 1) {
-            this.stop();
+        if (this.isBeyond) {
             this.displayBeyond(displayCallback);
         } else {
             let row = new Row(this.lins, this.settings);
@@ -196,5 +200,7 @@ class Linfinity {
 
     stop() {
         clearTimeout(this.timeout);
+        this.timeout = null;
+        this.stoppedCallback(this);
     }
 }
