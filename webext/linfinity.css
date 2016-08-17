@@ -10,9 +10,13 @@
   display: inline-block;
 }
 
+#display {
+  height: 100%;
+  width: 100%;
+}
+
 #displayScrollPane {
-  overflow-y: hidden;
-  height: 20em;
   position: absolute;
-  resize: vertical;
+  font-size: 16px;
+  line-height: 16px;
 }

@@ -1,6 +1,6 @@
 const DEFAULT_SETTINGS = {
     width: 40,
-    height: 9999999999999,
+    height: 20,
     delay: 100,
     blankChar: '_',
     collideChar: '#',
@@ -22,18 +22,22 @@ function resetLins(linfinity) {
 function linfinityStopped(linfinity) {
     START_STOP_BUTTON.started = false;
     START_STOP_BUTTON.value = "Start";
-    if(linfinity.isBeyond) {
+    if (linfinity.isBeyond) {
         resetLins(linfinity);
     }
 }
 
 const LINFINITY = new Linfinity(DEFAULT_SETTINGS, linfinityStopped);
 
+function linfinitySet(key, value) {
+    LINFINITY.settings[key] = value;
+}
+
 for (elem of document.querySelectorAll(".setting-input")) {
     let key = elem.id;
     elem.value = LINFINITY.settings[key];
     elem.addEventListener('change', function(e) {
-        LINFINITY.settings[key] = this.value;
+        linfinitySet(key, this.value);
     });
 }
 
@@ -42,14 +46,14 @@ document.getElementById('resetLins').addEventListener('click', function(e) {
 });
 
 const SCROLL_PANE = document.getElementById('displayScrollPane');
+
 function displayCallback(innerHTML, settings) {
     let container = document.getElementById('display');
-    let displayElement = document.createElement('p');
-    displayElement.innerHTML = `<pre>${innerHTML}</pre>`;
+    let displayElement = document.createElement('pre');
+    displayElement.style.margin = 0;
+    displayElement.style['font-size'] = 'inherit';
+    displayElement.innerHTML = `${innerHTML}`;
     container.appendChild(displayElement);
-    while (container.children.length > settings.height) {
-        container.firstElementChild.remove();
-    }
     SCROLL_PANE.scrollTop = SCROLL_PANE.scrollHeight;
 }
 
@@ -65,7 +69,40 @@ START_STOP_BUTTON.addEventListener('click', function(e) {
 });
 
 const SETTINGS_PANEL = document.getElementById('settings');
-function resizeDisplayScrollPane() {
-    let settingsHeight = SETTINGS_PANEL.clientHeight;
-    SCROLL_PANE.style.height = settingsHeight;
+const HEIGHT_INPUT = document.getElementById("height");
+const WIDTH_INPUT = document.getElementById("width");
+
+function linfinitySetWidth(width) {
+    linfinitySet('width', width);
 }
+function linfinitySetHeight(height) {
+    linfinitySet('height', height);
+}
+
+function styleScrollPane(key, value) {
+    SCROLL_PANE.style[key] = value;
+}
+function scrollPaneComputedStyle() {
+    return window.getComputedStyle(SCROLL_PANE, null);
+}
+
+function syncSettingsDimensionsToDisplay(event) {
+    let height = +HEIGHT_INPUT.value;
+    styleScrollPane('height', `${height}em`);
+    linfinitySetHeight(height);
+    let width = +WIDTH_INPUT.value;
+    linfinitySetWidth(width);
+}
+
+[HEIGHT_INPUT, WIDTH_INPUT].forEach(input => {
+    let key = input.id;
+    input.value = LINFINITY.settings[key];
+    input.addEventListener('change', syncSettingsDimensionsToDisplay);
+});
+
+function toggleScrollable(isScrollable) {
+    styleScrollPane('overflow-y', isScrollable ? 'scroll' : 'hidden');
+}
+
+syncSettingsDimensionsToDisplay();
+toggleScrollable(false);
