@@ -14,7 +14,9 @@ const DEFAULT_GAME_SETTINGS = {
 
 const DEFAULT_DISPLAY_SETTINGS = {
     height: 20,
-    manualScroll: false
+    manualScroll: false,
+    showAdvanced: false,
+    showHelp: true
 };
 let displaySettings = Object.assign({}, DEFAULT_DISPLAY_SETTINGS);
 
@@ -59,7 +61,7 @@ function displayCallback(innerHTML, settings) {
     displayElement.style['font-size'] = 'inherit';
     displayElement.innerHTML = `${innerHTML}`;
     container.appendChild(displayElement);
-    if(!displaySettings.manualScroll) {
+    if (!displaySettings.manualScroll) {
         SCROLL_PANE.scrollTop = SCROLL_PANE.scrollHeight;
     }
 }
@@ -76,7 +78,7 @@ START_STOP_BUTTON.addEventListener('click', function(e) {
 });
 
 const SETTINGS_HELP = document.getElementById('settingsHelp');
-for(let elem of document.querySelectorAll(".settings-help")) {
+for (let elem of document.querySelectorAll(".settings-help")) {
     // Outer elem will end up as the last element in selection and always get used in the event listener
     let innerElem = elem;
     elem.parentElement.addEventListener('mouseenter', function(e) {
@@ -91,6 +93,7 @@ const WIDTH_INPUT = document.getElementById("width");
 function styleScrollPane(key, value) {
     SCROLL_PANE.style[key] = value;
 }
+
 function scrollPaneComputedStyle() {
     return window.getComputedStyle(SCROLL_PANE, null);
 }
@@ -113,11 +116,38 @@ function toggleManualScroll(isScrollable) {
     styleScrollPane('overflow-y', isScrollable ? 'scroll' : 'hidden');
 }
 
+for(let elem of document.querySelectorAll('.setting-toggle')) {
+    elem.checked = displaySettings[elem.id];
+}
+
 const SCROLL_TOGGLE = document.getElementById('manualScroll');
 SCROLL_TOGGLE.addEventListener('change', function(e) {
     let toggled = displaySettings.manualScroll = SCROLL_TOGGLE.checked;
     toggleManualScroll(toggled);
 });
 
+function toggleAdvancedSettings(show) {
+    for (let elem of document.querySelectorAll('.advanced-setting')) {
+        elem.style.display = show ? null : 'none';
+    }
+}
+
+const ADVANCED_TOGGLE = document.getElementById('showAdvanced');
+ADVANCED_TOGGLE.addEventListener('change', function(e) {
+    let toggled = displaySettings.showAdvanced = ADVANCED_TOGGLE.checked;
+    toggleAdvancedSettings(toggled);
+});
+
+const HELP_TOGGLE = document.getElementById('showHelp');
+function toggleHelp(show) {
+    SETTINGS_HELP.style.display = show ? null : 'none';
+}
+
+HELP_TOGGLE.addEventListener('change', function(e) {
+    let toggled = displaySettings.showHelp = HELP_TOGGLE.checked;
+    toggleHelp(toggled);
+});
+
 syncSettingsDimensionsToDisplay();
 toggleManualScroll(displaySettings.manualScroll);
+toggleAdvancedSettings(displaySettings.showAdvanced);

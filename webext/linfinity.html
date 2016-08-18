@@ -23,14 +23,14 @@
                         Number of rows that will be displayed on screen (older rows will still exist in the history)
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                   <label>Manual Scroll</label>
-                  <input id="manualScroll" type="checkbox" />
+                  <input class="setting-toggle" id="manualScroll" type="checkbox" />
                   <div class="settings-help">
                     Chooses whether the game will automatically scroll or let you do it
                   </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="delay">Delay</label>
                     <input class="setting-input" size="5" id="delay" />
                     <div class="settings-help">
@@ -38,21 +38,21 @@
                         <br/> Specifically, this is the number of milliseconds to wait before displaying the next row.
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="blankChar">Blank Character</label>
                     <input class="setting-input" size="2" id="blankChar" />
                     <div class="settings-help">
                         All the other characters on the row that aren't part of a lin.
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="collideChar">Collide Character</label>
                     <input class="setting-input" size="2" id="collideChar" />
                     <div class="settings-help">
                         The character that will show when 2 lins collide
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="splitChance">Split Chance</label>
                     <input class="setting-input" size="5" id="splitChance" />
                     <div class="settings-help">
@@ -62,7 +62,7 @@
                         <br/> 1: each lin will split at every row
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="mergeChance">Merge Chance</label>
                     <input class="setting-input" size="5" id="mergeChance" />
                     <div class="settings-help">
@@ -72,7 +72,7 @@
                         <br/> 1: lins will always merge into each other
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="mutateChance">Mutate Chance</label>
                     <input class="setting-input" size="5" id="mutateChance" />
                     <div class="settings-help">
@@ -82,7 +82,7 @@
                         <br/> 1: split lins will always be different from the original
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="dieChance">Die Chance</label>
                     <input class="setting-input" size="5" id="dieChance" />
                     <div class="settings-help">
@@ -92,14 +92,14 @@
                         <br/> 1: lins will die immediately
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="linChars">Lin Characters</label>
                     <input class="setting-input" id="linChars" />
                     <div class="settings-help">
                         A lin could be represented by any of the characters input here.
                     </div>
                 </div>
-                <div>
+                <div class="advanced-setting">
                     <label for="beyondMessage">Beyond Message</label>
                     <input class="setting-input" id="beyondMessage" />
                     <div class="settings-help">
@@ -120,8 +120,16 @@
                         Use this to pause and resume the game at any time, or to start a new game after one has ended.
                     </div>
                 </div>
+                <div>
+                  <label for="showAdvanced">Show Advanced Settings</label>
+                  <input class="setting-toggle" id="showAdvanced" type="checkbox" />
+                </div>
+                <div id="settingsHelpContainer">
+                  <label for="showHelp">Show Help</label>
+                  <input class="setting-toggle" id="showHelp" type="checkbox" />
+                  <div id="settingsHelp"></div>
+                </div>
             </form>
-            <div id="settingsHelp"></div>
         </div>
         <div id="displayScrollPane" class="panel">
             <div id="display"></div>
