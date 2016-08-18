@@ -1,6 +1,5 @@
-const DEFAULT_SETTINGS = {
+const DEFAULT_GAME_SETTINGS = {
     width: 40,
-    height: 20,
     delay: 100,
     blankChar: '_',
     collideChar: '#',
@@ -12,6 +11,12 @@ const DEFAULT_SETTINGS = {
     beyondMessage: "...AND BEYOND!!!",
     initialNumLins: 4
 };
+
+const DEFAULT_DISPLAY_SETTINGS = {
+    height: 20,
+    manualScroll: false
+};
+let displaySettings = Object.assign({}, DEFAULT_DISPLAY_SETTINGS);
 
 const START_STOP_BUTTON = document.getElementById('startStop');
 
@@ -27,7 +32,7 @@ function linfinityStopped(linfinity) {
     }
 }
 
-const LINFINITY = new Linfinity(DEFAULT_SETTINGS, linfinityStopped);
+const LINFINITY = new Linfinity(DEFAULT_GAME_SETTINGS, linfinityStopped);
 
 function linfinitySet(key, value) {
     LINFINITY.settings[key] = value;
@@ -54,7 +59,9 @@ function displayCallback(innerHTML, settings) {
     displayElement.style['font-size'] = 'inherit';
     displayElement.innerHTML = `${innerHTML}`;
     container.appendChild(displayElement);
-    SCROLL_PANE.scrollTop = SCROLL_PANE.scrollHeight;
+    if(!displaySettings.manualScroll) {
+        SCROLL_PANE.scrollTop = SCROLL_PANE.scrollHeight;
+    }
 }
 
 START_STOP_BUTTON.addEventListener('click', function(e) {
@@ -81,13 +88,6 @@ const SETTINGS_PANEL = document.getElementById('settings');
 const HEIGHT_INPUT = document.getElementById("height");
 const WIDTH_INPUT = document.getElementById("width");
 
-function linfinitySetWidth(width) {
-    linfinitySet('width', width);
-}
-function linfinitySetHeight(height) {
-    linfinitySet('height', height);
-}
-
 function styleScrollPane(key, value) {
     SCROLL_PANE.style[key] = value;
 }
@@ -98,20 +98,26 @@ function scrollPaneComputedStyle() {
 function syncSettingsDimensionsToDisplay(event) {
     let height = +HEIGHT_INPUT.value;
     styleScrollPane('height', `${height}em`);
-    linfinitySetHeight(height);
     let width = +WIDTH_INPUT.value;
-    linfinitySetWidth(width);
+    linfinitySet('width', width);
 }
 
+WIDTH_INPUT.value = LINFINITY.settings[WIDTH_INPUT.id];
+HEIGHT_INPUT.value = displaySettings[HEIGHT_INPUT.id];
+
 [HEIGHT_INPUT, WIDTH_INPUT].forEach(input => {
-    let key = input.id;
-    input.value = LINFINITY.settings[key];
     input.addEventListener('change', syncSettingsDimensionsToDisplay);
 });
 
-function toggleScrollable(isScrollable) {
+function toggleManualScroll(isScrollable) {
     styleScrollPane('overflow-y', isScrollable ? 'scroll' : 'hidden');
 }
 
+const SCROLL_TOGGLE = document.getElementById('manualScroll');
+SCROLL_TOGGLE.addEventListener('change', function(e) {
+    let toggled = displaySettings.manualScroll = SCROLL_TOGGLE.checked;
+    toggleManualScroll(toggled);
+});
+
 syncSettingsDimensionsToDisplay();
-toggleScrollable(false);
+toggleManualScroll(displaySettings.manualScroll);
