@@ -12,56 +12,122 @@
                 <div>
                     <label for="width">Width</label>
                     <input size="5" id="width" />
+                    <div class="settings-help">
+                      Number of characters wide each row will be
+                    </div>
                 </div>
                 <div>
                     <label for="height">Height</label>
                     <input size="5" id="height" />
+                    <div class="settings-help">
+                      Number of rows that will be displayed on screen (older rows will still exist in the history)
+                    </div>
                 </div>
                 <div>
                     <label for="delay">Delay</label>
                     <input class="setting-input" size="5" id="delay" />
+                    <div class="settings-help">
+                      The lower this is, the faster the game will go.
+                      <br/>
+                      Specifically, this is the number of milliseconds to wait before displaying the next row.
+                    </div>
                 </div>
                 <div>
                     <label for="blankChar">Blank Character</label>
                     <input class="setting-input" size="2" id="blankChar" />
+                    <div class="settings-help">
+                      All the other characters on the row that aren't part of a lin.
+                    </div>
                 </div>
                 <div>
                     <label for="collideChar">Collide Character</label>
                     <input class="setting-input" size="2" id="collideChar" />
+                    <div class="settings-help">
+                      The character that will show when 2 lins collide
+                    </div>
                 </div>
                 <div>
                     <label for="splitChance">Split Chance</label>
                     <input class="setting-input" size="5" id="splitChance" />
+                    <div class="settings-help">
+                      Chance a lin will split in two on the next row.
+                      <br/>
+                      Should be a decimal from 0 to 1.
+                      <br/>
+                      0: lins will never split
+                      <br/>
+                      1: each lin will split at every row
+                    </div>
                 </div>
                 <div>
                     <label for="mergeChance">Merge Chance</label>
                     <input class="setting-input" size="5" id="mergeChance" />
+                    <div class="settings-help">
+                      Chance a lin will merge into a lin it collides with.
+                      <br/>
+                      Should be a decimal from 0 to 1.
+                      <br/>
+                      0: lins will always bounce off each other
+                      <br/>
+                      1: lins will always merge into each other
+                    </div>
                 </div>
                 <div>
                     <label for="mutateChance">Mutate Chance</label>
                     <input class="setting-input" size="5" id="mutateChance" />
+                    <div class="settings-help">
+                      When a lin splits, the chance the lin that splits off will be a different character and/or color.
+                      <br/>
+                      Should be a decimal from 0 to 1.
+                      <br/>
+                      0: split lins will always be the same as the original
+                      <br/>
+                      1: split lins will always be different from the original
+                    </div>
                 </div>
                 <div>
                     <label for="dieChance">Die Chance</label>
                     <input class="setting-input" size="5" id="dieChance" />
+                    <div class="settings-help">
+                      Chance a lin will die on the next row.
+                      <br/>
+                      Should be a decimal from 0 to 1.
+                      <br/>
+                      0: lins will never die on their own
+                      <br/>
+                      1: lins will die immediately
+                    </div>
                 </div>
                 <div>
                     <label for="linChars">Lin Characters</label>
                     <input class="setting-input" id="linChars" />
+                    <div class="settings-help">
+                      A lin could be represented by any of the characters input here.
+                    </div>
                 </div>
                 <div>
                     <label for="beyondMessage">Beyond Message</label>
                     <input class="setting-input" id="beyondMessage" />
+                    <div class="settings-help">
+                      The message to display when there are no more lins left.
+                    </div>
                 </div>
                 <div>
                     <label for="numLins"># of Lins</label>
                     <input class="setting-input" size="3" id="initialNumLins" />
                     <input type="button" value="Reset Lins" id="resetLins" />
+                    <div class="settings-help">
+                      The next row will have a new set of the specified number of lins placed randomly.
+                    </div>
                 </div>
                 <div>
                     <input type="button" value="Start" id="startStop" />
+                    <div class="settings-help">
+                      Use this to pause and resume the game at any time, or to start a new game after one has ended.
+                    </div>
                 </div>
             </form>
+            <div id="settingsHelp"></div>
         </div>
         <div id="displayScrollPane" class="panel">
             <div id="display"></div>

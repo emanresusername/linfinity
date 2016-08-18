@@ -33,7 +33,7 @@ function linfinitySet(key, value) {
     LINFINITY.settings[key] = value;
 }
 
-for (elem of document.querySelectorAll(".setting-input")) {
+for (let elem of document.querySelectorAll(".setting-input")) {
     let key = elem.id;
     elem.value = LINFINITY.settings[key];
     elem.addEventListener('change', function(e) {
@@ -67,6 +67,15 @@ START_STOP_BUTTON.addEventListener('click', function(e) {
         linfinityStopped(LINFINITY);
     }
 });
+
+const SETTINGS_HELP = document.getElementById('settingsHelp');
+for(let elem of document.querySelectorAll(".settings-help")) {
+    // Outer elem will end up as the last element in selection and always get used in the event listener
+    let innerElem = elem;
+    elem.parentElement.addEventListener('mouseenter', function(e) {
+        SETTINGS_HELP.innerHTML = innerElem.innerHTML;
+    });
+};
 
 const SETTINGS_PANEL = document.getElementById('settings');
 const HEIGHT_INPUT = document.getElementById("height");

@@ -1,5 +1,13 @@
+#settings {
+  width: 17em;
+}
+
 #settings form div {
   padding-top: 5px;
+}
+
+.settings-help {
+  display: none;
 }
 
 #settings form div input {
