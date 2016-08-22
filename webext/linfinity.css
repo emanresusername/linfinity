@@ -1,5 +1,19 @@
 #settings {
   width: 17em;
+  height: 90vh;
+  position: relative
+}
+
+#settingsScrollPane {
+  height: 70vh;
+  overflow-y: scroll;
+  position: relative;
+}
+
+#settingsHelpContainer {
+  height: 20vh;
+  overflow-y: scroll;
+  position: relative;
 }
 
 #settings form div {

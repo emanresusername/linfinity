@@ -19,6 +19,14 @@
         }
     },
 
+    "background": {
+        "scripts": ["background.js"]
+    },
+
+    "web_accessible_resources": [
+        "linfinity.html"
+    ],
+
     "browser_action": {
         "browser_style": true,
         "default_icon": {
@@ -27,7 +35,6 @@
             "96": "icons/96.png",
             "128": "icons/128.png"
         },
-        "default_title": "Linfinity",
-        "default_popup": "linfinity.html"
+        "default_title": "Linfinity"
     }
 }

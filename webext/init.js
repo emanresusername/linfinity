@@ -1,19 +1,19 @@
 const DEFAULT_GAME_SETTINGS = {
-    width: 40,
+    width: 25,
     delay: 100,
     blankChar: '_',
     collideChar: '#',
     splitChance: 0.01,
-    mergeChance: 0.35,
-    mutateChance: 0.25,
-    dieChance: 0.001,
+    mergeChance: 0.25,
+    mutateChance: 0.35,
+    dieChance: 0,
     linChars: "0123456789",
     beyondMessage: "...AND BEYOND!!!",
-    initialNumLins: 4
+    initialNumLins: 3
 };
 
 const DEFAULT_DISPLAY_SETTINGS = {
-    height: 20,
+    height: 16,
     manualScroll: false,
     showAdvanced: false,
     showHelp: true
@@ -151,3 +151,7 @@ HELP_TOGGLE.addEventListener('change', function(e) {
 syncSettingsDimensionsToDisplay();
 toggleManualScroll(displaySettings.manualScroll);
 toggleAdvancedSettings(displaySettings.showAdvanced);
+
+function resizeWindow() {
+    alert("hello");
+}
