@@ -155,3 +155,5 @@ toggleAdvancedSettings(displaySettings.showAdvanced);
 function resizeWindow() {
     alert("hello");
 }
+
+START_STOP_BUTTON.click();
