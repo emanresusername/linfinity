@@ -78,11 +78,20 @@ START_STOP_BUTTON.addEventListener('click', function(e) {
 });
 
 const SETTINGS_HELP = document.getElementById('settingsHelp');
+const SHOW_HELP_DELAY = 500;
 for (let elem of document.querySelectorAll(".settings-help")) {
     // Outer elem will end up as the last element in selection and always get used in the event listener
-    let innerElem = elem;
-    elem.parentElement.addEventListener('mouseenter', function(e) {
-        SETTINGS_HELP.innerHTML = innerElem.innerHTML;
+    let innerElem = elem,
+        parent = elem.parentElement,
+        helpTimeout;
+    parent.addEventListener('mouseenter', function(e) {
+        helpTimeout = setTimeout(function() {
+            SETTINGS_HELP.innerHTML = innerElem.innerHTML;
+        }, SHOW_HELP_DELAY);
+    });
+
+    parent.addEventListener('mouseleave', function() {
+        clearTimeout(helpTimeout);
     });
 };
 
