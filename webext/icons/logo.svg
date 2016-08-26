@@ -1,44 +1,370 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="128px" height="128px" viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve">  <image id="image0" width="128" height="128" x="0" y="0"
-    xlink:href="data:image/png;base64,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" />
-</svg>
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="557.29846"
+   height="589.99377"
+   viewBox="0 0 557.29846 589.99377"
+   enable-background="new 0 0 128 128"
+   xml:space="preserve"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="logo.svg"><metadata
+     id="metadata8"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+     id="defs6"><linearGradient
+       inkscape:collect="always"
+       id="linearGradient5882"><stop
+         style="stop-color:#00ff00;stop-opacity:1;"
+         offset="0"
+         id="stop5884" /><stop
+         style="stop-color:#00ff00;stop-opacity:0;"
+         offset="1"
+         id="stop5886" /></linearGradient><linearGradient
+       id="linearGradient5876"
+       osb:paint="solid"><stop
+         style="stop-color:#00ff00;stop-opacity:1;"
+         offset="0"
+         id="stop5878" /></linearGradient><filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter4437"
+       x="-0.0037058675"
+       width="1.0074117"
+       y="-0.0035000133"
+       height="1.007"><feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.85836914"
+         id="feGaussianBlur4439" /></filter><radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5882"
+       id="radialGradient5888"
+       cx="274.64921"
+       cy="290.99686"
+       fx="274.64921"
+       fy="290.99686"
+       r="280.0093"
+       gradientTransform="matrix(1,0,0,1.0583825,0,-16.989125)"
+       gradientUnits="userSpaceOnUse" /></defs><sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="852"
+     id="namedview4"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.84375"
+     inkscape:cx="337.80381"
+     inkscape:cy="448.1576"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer3" /><g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="red text"><text
+       sodipodi:linespacing="125%"
+       id="text5932"
+       y="23.860157"
+       x="-5.3000002"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:125%;font-family:monospace;-inkscape-font-specification:'monospace, Bold Italic';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;opacity:1;fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4437);"
+       xml:space="preserve"><tspan
+         y="23.860157"
+         x="-5.3000002"
+         id="tspan5934"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">______________________Y</tspan><tspan
+         y="73.860153"
+         x="-5.3000002"
+         id="tspan5936"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">____________________T__</tspan><tspan
+         y="123.86015"
+         x="-5.3000002"
+         id="tspan5938"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">__________________I____</tspan><tspan
+         y="173.86015"
+         x="-5.3000002"
+         id="tspan5940"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">________________N______</tspan><tspan
+         y="223.86015"
+         x="-5.3000002"
+         id="tspan5942"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">______________I___A____</tspan><tspan
+         y="273.86017"
+         x="-5.3000002"
+         id="tspan5944"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">____________F_______N__</tspan><tspan
+         y="323.86017"
+         x="-5.3000002"
+         id="tspan5946"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">__________N___________D</tspan><tspan
+         y="373.86017"
+         x="-5.3000002"
+         id="tspan5948"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">________I___________N__</tspan><tspan
+         y="423.86017"
+         x="-5.3000002"
+         id="tspan5950"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">______L___________O____</tspan><tspan
+         y="473.86017"
+         x="-5.3000002"
+         id="tspan5952"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">____ ___________Y______</tspan><tspan
+         y="523.86017"
+         x="-5.3000002"
+         id="tspan5954"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">__O___________E________</tspan><tspan
+         y="573.86017"
+         x="-5.3000002"
+         id="tspan5956"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;">T___________B__________</tspan><tspan
+         y="623.86017"
+         x="-5.3000002"
+         id="tspan5958"
+         sodipodi:role="line"
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"></tspan></text>
+</g><g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="blue text"><text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:125%;font-family:monospace;-inkscape-font-specification:'monospace, Bold Italic';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;opacity:1;fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4437);"
+       x="12.7"
+       y="27.860157"
+       id="text5890"
+       sodipodi:linespacing="125%"><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5892"
+         x="12.7"
+         y="27.860157">______________________Y</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5894"
+         x="12.7"
+         y="77.860153">____________________T__</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5896"
+         x="12.7"
+         y="127.86015">__________________I____</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5898"
+         x="12.7"
+         y="177.86015">________________N______</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5900"
+         x="12.7"
+         y="227.86015">______________I___A____</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5902"
+         x="12.7"
+         y="277.86017">____________F_______N__</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5904"
+         x="12.7"
+         y="327.86017">__________N___________D</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5906"
+         x="12.7"
+         y="377.86017">________I___________N__</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5908"
+         x="12.7"
+         y="427.86017">______L___________O____</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5910"
+         x="12.7"
+         y="477.86017">____ ___________Y______</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5912"
+         x="12.7"
+         y="527.86017">__O___________E________</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5914"
+         x="12.7"
+         y="577.86017">T___________B__________</tspan><tspan
+         style="fill:#060600;fill-opacity:1;stroke:#0000ff;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;"
+         sodipodi:role="line"
+         id="tspan5916"
+         x="12.7"
+         y="627.86017"></tspan></text>
+</g><g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="green text"><text
+       sodipodi:linespacing="125%"
+       id="text4300"
+       y="35.860157"
+       x="2.6999998"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:125%;font-family:monospace;-inkscape-font-specification:'monospace, Bold Italic';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;opacity:1;fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4437)"
+       xml:space="preserve"><tspan
+         y="35.860157"
+         x="2.6999998"
+         id="tspan4302"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">______________________Y</tspan><tspan
+         y="85.860153"
+         x="2.6999998"
+         id="tspan4304"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">____________________T__</tspan><tspan
+         y="135.86015"
+         x="2.6999998"
+         id="tspan4306"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">__________________I____</tspan><tspan
+         y="185.86015"
+         x="2.6999998"
+         id="tspan4308"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">________________N______</tspan><tspan
+         y="235.86015"
+         x="2.6999998"
+         id="tspan4310"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">______________I___A____</tspan><tspan
+         y="285.86017"
+         x="2.6999998"
+         id="tspan4312"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">____________F_______N__</tspan><tspan
+         y="335.86017"
+         x="2.6999998"
+         id="tspan4314"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">__________N___________D</tspan><tspan
+         y="385.86017"
+         x="2.6999998"
+         id="tspan4316"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">________I___________N__</tspan><tspan
+         y="435.86017"
+         x="2.6999998"
+         id="tspan4318"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">______L___________O____</tspan><tspan
+         y="485.86017"
+         x="2.6999998"
+         id="tspan4320"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">____ ___________Y______</tspan><tspan
+         y="535.86017"
+         x="2.6999998"
+         id="tspan4322"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">__O___________E________</tspan><tspan
+         y="585.86017"
+         x="2.6999998"
+         id="tspan4324"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">T___________B__________</tspan><tspan
+         y="635.86017"
+         x="2.6999998"
+         id="tspan4326"
+         sodipodi:role="line"
+         style="fill:#00ff00;fill-opacity:1;stroke:#00ff00;stroke-width:2.5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"></tspan></text>
+</g><g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="black text"
+     style="display:inline"><text
+       xml:space="preserve"
+       style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:125%;font-family:monospace;-inkscape-font-specification:'monospace, Bold Italic';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;opacity:1;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:1.39999998;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="0.69999999"
+       y="29.860157"
+       id="text3336"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4240"
+         x="0.69999999"
+         y="29.860157">______________________Y</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4242"
+         x="0.69999999"
+         y="79.860153">____________________T__</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4244"
+         x="0.69999999"
+         y="129.86015">__________________I____</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4246"
+         x="0.69999999"
+         y="179.86015">________________N______</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4248"
+         x="0.69999999"
+         y="229.86015">______________I___A____</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4250"
+         x="0.69999999"
+         y="279.86017">____________F_______N__</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4252"
+         x="0.69999999"
+         y="329.86017">__________N___________D</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4254"
+         x="0.69999999"
+         y="379.86017">________I___________N__</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4256"
+         x="0.69999999"
+         y="429.86017">______L___________O____</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4258"
+         x="0.69999999"
+         y="479.86017">____ ___________Y______</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4260"
+         x="0.69999999"
+         y="529.86017">__O___________E________</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4262"
+         x="0.69999999"
+         y="579.86017">T___________B__________</tspan><tspan
+         sodipodi:role="line"
+         id="tspan4264"
+         x="0.69999999"
+         y="629.86017"></tspan></text>
+</g></svg>
