@@ -7,7 +7,7 @@ const DEFAULT_GAME_SETTINGS = {
     mergeChance: 0.25,
     mutateChance: 0.35,
     dieChance: 0,
-    linChars: "0123456789",
+    linChars: "∞",
     beyondMessage: "...AND BEYOND!!!",
     initialNumLins: 3
 };
