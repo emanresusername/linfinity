@@ -105,21 +105,32 @@ class Row {
     }
 
     display() {
-        let rowHtml = '';
+        let colorData = [];
+        let chars = '';
         for (let i = 0; i < this.settings.width; ++i) {
+            let color, char;
             if (this.lin_positions.has(i)) {
                 let lins = this.lin_positions.get(i);
                 if (lins.length > 1) {
-                    rowHtml += this.settings.collideChar;
+                    char = this.settings.collideChar.charAt(0);
+                    color = 'black';
                 } else if (lins.length == 1) {
                     let lin = lins[0];
-                    rowHtml += `<span style="color: ${lin.color};">${lin.char}</span>`;
+                    char = lin.char;
+                    color = lin.color;
                 }
             } else {
-                rowHtml += this.settings.blankChar;
+                char = this.settings.blankChar;
+                color = 'black';
             }
+            chars += char;
+            colorData.push({
+                start: i,
+                length: 1,
+                color: color
+            });
         }
-        return rowHtml;
+        return {chars, colorData};
     }
 
     collideLins() {
@@ -187,8 +198,14 @@ class Linfinity {
                 for (let i = 0; i < this.settings.width; ++i) {
                     string += char;
                 }
-                displayCallback(string, this.settings);
-                ++c;
+                displayCallback({
+                    chars: string,
+                    colorData: [{
+                        start: 0,
+                        length: string.length,
+                        color: 'black'
+                    }]
+                }, this.settings);                ++c;
                 this.timeout = setTimeout(
                     displayRowAndQueueNext,
                     this.settings.delay * 3

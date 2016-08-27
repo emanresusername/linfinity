@@ -54,12 +54,19 @@ document.getElementById('resetLins').addEventListener('click', function(e) {
 
 const SCROLL_PANE = document.getElementById('displayScrollPane');
 
-function displayCallback(innerHTML, settings) {
+function coloredCharElem(chars, {start, color, length}) {
+    let elem = document.createElement('span');
+    elem.textContent = chars.substr(start, length);
+    elem.style.color = color;
+    return elem;
+}
+
+function displayCallback({chars, colorData}, settings) {
     let container = document.getElementById('display');
     let displayElement = document.createElement('pre');
     displayElement.style.margin = 0;
     displayElement.style['font-size'] = 'inherit';
-    displayElement.innerHTML = `${innerHTML}`;
+    colorData.forEach((datum) => displayElement.appendChild(coloredCharElem(chars, datum)));
     container.appendChild(displayElement);
     if (!displaySettings.manualScroll) {
         SCROLL_PANE.scrollTop = SCROLL_PANE.scrollHeight;
