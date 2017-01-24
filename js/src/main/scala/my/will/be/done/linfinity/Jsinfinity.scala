@@ -240,15 +240,30 @@ object Jsinfinity extends js.JSApp {
     isPaused := false
   }
 
+  def stop: Unit = {
+    isStopped := true
+    rows.get.clear
+  }
+
   @dom
   def controlButtons: Binding[Node] = {
+    val stopped = isStopped.bind
     <div class={InlineStyles.controlButtons.htmlClass}>
       <div onclick={event: Event ⇒ restartRows}>
-      {if (isStopped.bind) "Start" else "Restart"}
+      {if (stopped) "Start" else "Restart"}
       </div>
       <div onclick={event: Event ⇒ isPaused := !isPaused.get}>
       {if (isPaused.bind) "Unpause" else "Pause"}
       </div>
+      {
+        if(stopped) {
+          <!-- already stopped -->
+        } else {
+          <div onclick={event: Event ⇒ stop}>
+            Stop
+          </div>
+        }
+      }
       </div>
   }
 
