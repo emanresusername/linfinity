@@ -19,7 +19,7 @@ object InlineStyles extends StyleSheet.Inline {
     justifyContent.spaceAround
   )
 
-  val rows = style(
+  val rowsPanel = style(
     mainPanelCommon
   )
 
@@ -67,5 +67,11 @@ object InlineStyles extends StyleSheet.Inline {
       borderStyle.outset,
       backgroundColor(c"#ddd")
     )
+  )
+
+  val linStatuses = style(
+    display.flex,
+    justifyContent.spaceAround,
+    flexWrap.wrap
   )
 }

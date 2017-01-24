@@ -151,8 +151,9 @@ object Jsinfinity extends js.JSApp {
       </div>
   }
 
-  def cssColor(color: Color): String = {
-    Seq(color.red, color.green, color.blue).foldLeft("#") {
+  def cssColor(lin: Lin): String = {
+    val color = lin.color
+    Seq(color.red, color.green, color.blue).foldLeft("color: #") {
       case (string, value) ⇒
         string ++ value.toHexString
     }
@@ -166,7 +167,7 @@ object Jsinfinity extends js.JSApp {
           lindexes.get(index) match {
             case Some(one) if one.length == 1 ⇒
               val lin = one.head
-                <span style={"color: " ++ cssColor(lin.color) ++ ";"}>{
+                <span style={cssColor(lin)}>{
                   lin.display.toString
                 }</span>
             case Some(more) if more.length > 1 ⇒
@@ -252,22 +253,67 @@ object Jsinfinity extends js.JSApp {
   }
 
   @dom
+  def linStatus(lin: Lin): Binding[Node] = {
+    val style = Seq(
+      cssColor(lin)
+    ).mkString(";")
+    <div style={style}>{lin.display.toString}</div>
+  }
+
+  @dom
+  def lineageStatus(lineage: Int, lins: Seq[Lin]): Binding[Node] = {
+    <div>
+      <div>Lineage {lineage.toString}:</div>
+      <div class={InlineStyles.linStatuses.htmlClass}>{
+        Constants(lins.sortBy(-_.age):_*).map { lin ⇒
+          linStatus(lin).bind
+        }
+      }</div>
+      </div>
+  }
+
+  @dom
+  def statusPanel: Binding[Node] = {
+    if (rows.length.bind > 0) {
+      val lineages = rows.bind.head.lindexes.map(_.lin).groupBy(_.lineage)
+      <div>{
+          Constants(lineages.toSeq:_*).map {
+            case (lineage, lins) ⇒
+              lineageStatus(lineage, lins).bind
+          }
+        }</div>
+    } else {
+      <!-- no rows yet -->
+    }
+  }
+
+  @dom
+  def rowsPanel: Binding[Node] = {
+    if (rows.length.bind > 0) {
+      <div class={InlineStyles.rowsPanel.htmlClass}>
+        {
+          rows.map {row ⇒
+            display(row).bind
+          }
+        }
+        </div>
+    } else {
+      <!-- no rows yet -->
+    }
+  }
+
+  @dom
   def render: Binding[Node] = {
     <div>
       <style>{InlineStyles.render[String]}</style>
       <style>{StandaloneStyles.render[String]}</style>
       <div class={InlineStyles.mainContainer.htmlClass}>
       <div class={InlineStyles.confPanel.htmlClass}>
+      { statusPanel.bind }
       { confPanel.bind }
-    {controlButtons.bind}
+      { controlButtons.bind }
       </div>
-      <div class={InlineStyles.rows.htmlClass}>
-      {
-        rows.map {row ⇒
-          display(row).bind
-        }
-      }
-      </div>
+      { rowsPanel.bind }
       </div>
       </div>
   }
