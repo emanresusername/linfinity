@@ -146,7 +146,7 @@ object Jsinfinity extends js.JSApp {
       </div>
       <div>
       <label>row history: </label>
-      {intInputElem(rowHistory).bind}
+      {intInputElem(Settings.rowHistory).bind}
       </div>
       </div>
   }
@@ -184,35 +184,46 @@ object Jsinfinity extends js.JSApp {
   }
 
   def updateLinChances: Unit = {
-    val rows       = this.rows.get
-    val updatedRow = rows.head.mapLins(_.copy(chances = conf.chances))
-    rows.update(0, updatedRow)
+    nextRow := (
+      for {
+        row ← nextRow.get
+      } yield {
+        row.mapLins(_.copy(chances = conf.chances))
+      }
+    )
   }
 
   def updateRowWidth: Unit = {
-    val rows = this.rows.get
-    rows.update(0, rows.head.copy(width = conf.width))
+    nextRow := (
+      for {
+        row ← nextRow.get
+      } yield {
+        row.copy(width = conf.width)
+      }
+    )
   }
 
-  val rows      = Vars.empty[Row]
+  val nextRow = Var[Option[Row]](None)
+  val rowHistory = Vars.empty[Row]
   val isPaused  = Var(false)
   val isStopped = Var(true)
 
-  def addNextRow(): Unit = {
-    if (!isPaused.get) {
-      val rows = this.rows.get
-      if (rows.nonEmpty) {
-        val lastRow = rows.head
-        if (lastRow.lindexes.nonEmpty) {
-          rows.+=:(lastRow.next)
-          val currentNumRows = rows.length
-          val allowedNumRows = Settings.rowHistory.get
-          if (currentNumRows > allowedNumRows) {
-            rows.trimEnd(currentNumRows - allowedNumRows)
-          }
-        } else {
-          isStopped := true
+  def onRowInterval(): Unit = {
+    for {
+      row ← nextRow.get
+      if (!isPaused.get)
+    } {
+      if (row.lindexes.nonEmpty) {
+        nextRow := Option(row.next)
+        val rows = rowHistory.get
+        rows.+=:(row)
+        val currentNumRows = rows.length
+        val allowedNumRows = Settings.rowHistory.get
+        if (currentNumRows > allowedNumRows) {
+          rows.trimEnd(currentNumRows - allowedNumRows)
         }
+      } else {
+        isStopped := true
       }
     }
   }
@@ -220,7 +231,7 @@ object Jsinfinity extends js.JSApp {
   @dom
   def rowDelayInput: Binding[HTMLInputElement] = {
     val rowDelay    = Settings.rowDelay.bind
-    val rowInterval = setInterval(rowDelay)(addNextRow)
+    val rowInterval = setInterval(rowDelay)(onRowInterval)
     val changeHandler = inputEventHandler { input ⇒
       val newDuration = durationFromString(input.value)
       if (newDuration != rowDelay) {
@@ -233,16 +244,16 @@ object Jsinfinity extends js.JSApp {
   }
 
   def restartRows: Unit = {
-    val rows = this.rows.get
-    rows.clear
-    rows += Row(conf)
+    rowHistory.get.clear
+    nextRow := Option(Row(conf))
     isStopped := false
     isPaused := false
   }
 
   def stop: Unit = {
     isStopped := true
-    rows.get.clear
+    rowHistory.get.clear
+    nextRow := None
   }
 
   @dom
@@ -289,31 +300,32 @@ object Jsinfinity extends js.JSApp {
 
   @dom
   def statusPanel: Binding[Node] = {
-    if (rows.length.bind > 0) {
-      val lineages = rows.bind.head.lindexes.map(_.lin).groupBy(_.lineage)
-      <div>{
-          Constants(lineages.toSeq:_*).map {
-            case (lineage, lins) ⇒
-              lineageStatus(lineage, lins).bind
-          }
-        }</div>
-    } else {
-      <!-- no rows yet -->
+    nextRow.bind match {
+      case None ⇒
+        <!-- -->
+      case Some(row) ⇒
+        val lineages = row.lindexes.map(_.lin).groupBy(_.lineage)
+          <div>{
+            Constants(lineages.toSeq:_*).map {
+              case (lineage, lins) ⇒
+                lineageStatus(lineage, lins).bind
+            }
+          }</div>
     }
   }
 
   @dom
   def rowsPanel: Binding[Node] = {
-    if (rows.length.bind > 0) {
+    if (rowHistory.length.bind > 0) {
       <div class={InlineStyles.rowsPanel.htmlClass}>
         {
-          rows.map {row ⇒
+          rowHistory.map {row ⇒
             display(row).bind
           }
         }
         </div>
     } else {
-      <!-- no rows yet -->
+      <!-- -->
     }
   }
 
