@@ -8,6 +8,7 @@ case class Lin(
     color: Color,
     speed: Int,
     chances: Chances,
+    lineage: Int,
     age: Int = 0
 ) extends Point(display, color) {
   import Lin._
@@ -55,13 +56,14 @@ object Lin {
     if (Random.nextBoolean) heads else tails
   }
 
-  def random(displays: Seq[Char], chances: Chances): Lin = {
+  def random(displays: Seq[Char], chances: Chances, lineage: Int): Lin = {
     Lin(
       chances = chances,
       displays = displays,
       display = randomDisplay(displays),
       color = Color.random,
-      speed = cointoss(1, -1)
+      speed = cointoss(1, -1),
+      lineage = lineage
     )
   }
 }

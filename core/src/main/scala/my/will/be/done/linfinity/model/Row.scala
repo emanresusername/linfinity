@@ -93,10 +93,10 @@ object Row {
     Row(
       width = width,
       lindexes = for {
-        _ ← 1 to conf.initialNumLins
+        lineage ← 1 to conf.initialNumLins
       } yield {
         Lindex(
-          lin = Lin.random(conf.linDisplays, conf.chances),
+          lin = Lin.random(conf.linDisplays, conf.chances, lineage),
           index = Random.nextInt(width)
         )
       }
