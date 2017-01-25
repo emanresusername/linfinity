@@ -10,7 +10,7 @@ case class Lin(
     chances: Chances,
     lineage: Int,
     age: Int = 0
-) extends Point(display, color) {
+) {
   import Lin._
 
   def bounce: Lin = {
