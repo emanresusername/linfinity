@@ -1,4 +1,4 @@
-package my.will.be.done.linfinity
+package my.will.be.done.linfinity.www
 
 import scalacss.Defaults._
 import InlineStyles._

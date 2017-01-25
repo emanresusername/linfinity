@@ -1,4 +1,4 @@
-package my.will.be.done.linfinity
+package my.will.be.done.linfinity.www
 
 import org.scalajs.dom.document
 import com.thoughtworks.binding.dom
@@ -8,24 +8,26 @@ import org.scalajs.dom.raw.Node
 import scala.scalajs.js
 import org.scalajs.dom.html
 import my.will.be.done.linfinity.model._
+import my.will.be.done.linfinity.util.Duration
 import scala.scalajs.js.timers.{setInterval, clearInterval}
 import scala.concurrent.duration._
 import org.scalajs.dom.raw.{HTMLInputElement, Event}
 import scalacss.Defaults._
+import com.softwaremill.quicklens._
 
 object Jsinfinity extends js.JSApp {
   val ContainerId = "linfinity"
   object Settings {
-    val width          = Var(50)
-    val blankDisplay   = Var('_')
-    val collideDisplay = Var('X')
-    val initialNumLins = Var(3)
-    val rowDelay       = Var(100.millis)
-    val linDisplays    = Var("0123456789")
-    val split          = Var(0.005)
-    val merge          = Var(0.25)
-    val die            = Var(0.002)
-    val mutate         = Var(0.0075)
+    val width          = Var(Setting.Width.default)
+    val blankDisplay   = Var(Setting.BlankDisplay.default)
+    val collideDisplay = Var(Setting.CollideDisplay.default)
+    val initialNumLins = Var(Setting.InitialNumLins.default)
+    val rowDelay       = Var(Setting.RowDelay.default)
+    val linDisplays    = Var(Setting.LinDisplays.default)
+    val split          = Var(Setting.SplitChance.default)
+    val merge          = Var(Setting.MergeChance.default)
+    val die            = Var(Setting.DieChance.default)
+    val mutate         = Var(Setting.MutateChance.default)
     val rowHistory     = Var(25)
     val isReversed     = Var(false)
   }
@@ -84,14 +86,6 @@ object Jsinfinity extends js.JSApp {
     inputElem(value, _.toDouble, additionalHandling = { _ ⇒
       updateLinChances
     })
-  }
-
-  val DurationRegex = """\s*(\d+)\s*(\w+)\s*""".r
-  def durationFromString(string: String): FiniteDuration = {
-    string match {
-      case DurationRegex(length, unit) ⇒
-        Duration(length.toLong, unit)
-    }
   }
 
   def inputEventHandler(handler: HTMLInputElement ⇒ Unit): Event ⇒ Unit = { event: Event ⇒
@@ -200,7 +194,7 @@ object Jsinfinity extends js.JSApp {
       for {
         row ← nextRow.get
       } yield {
-        row.mapLins(_.copy(chances = conf.chances))
+        row.modify(_.lindexes.each.lin.chances).setTo(conf.chances)
       }
     )
   }
@@ -265,7 +259,7 @@ object Jsinfinity extends js.JSApp {
     val rowDelay    = Settings.rowDelay.bind
     val rowInterval = setInterval(rowDelay)(onRowInterval)
     val changeHandler = inputEventHandler { input ⇒
-      val newDuration = durationFromString(input.value)
+      val newDuration = Duration(input.value)
       if (newDuration != rowDelay) {
         clearInterval(rowInterval)
         Settings.rowDelay := newDuration

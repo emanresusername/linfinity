@@ -11,3 +11,19 @@ case class Conf(
     chances: Chances,
     linDisplays: Seq[Char]
 )
+
+object Conf
+    extends Conf(
+      width = Setting.Width.default,
+      blankDisplay = Setting.BlankDisplay.default,
+      collideDisplay = Setting.CollideDisplay.default,
+      initialNumLins = Setting.InitialNumLins.default,
+      rowDelay = Setting.RowDelay.default,
+      chances = Chances(
+        split = Setting.SplitChance.default,
+        merge = Setting.MergeChance.default,
+        mutate = Setting.MutateChance.default,
+        die = Setting.DieChance.default
+      ),
+      linDisplays = Setting.LinDisplays.default
+    )

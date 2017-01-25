@@ -2,40 +2,18 @@ package my.will.be.done.linfinity.model
 
 import Row.Lindex
 import scala.util.Random
+import com.softwaremill.quicklens._
 
 case class Row(
     lindexes: Seq[Lindex],
     width: Int
 ) {
-  def mapLindexes(mapper: Lindex ⇒ Lindex): Row = {
-    copy(
-      lindexes = lindexes.map(mapper)
-    )
-  }
-
-  def mapLins(mapper: Lin ⇒ Lin): Row = {
-    mapLindexes { lindex ⇒
-      lindex.copy(lin = mapper(lindex.lin))
-    }
-  }
-
-  def flatmapLins(mapper: Lin ⇒ Seq[Lin]): Row = {
-    copy(
-      lindexes = for {
-        lindex ← lindexes
-        lin    ← mapper(lindex.lin)
-      } yield {
-        lindex.copy(lin = lin)
-      }
-    )
-  }
-
   def moveLins: Row = {
-    mapLindexes(_.moveLin)
+    this.modify(_.lindexes.each).using(_.moveLin)
   }
 
   def bounceOutOfBoundsLins: Row = {
-    mapLindexes { lindex ⇒
+    this.modify(_.lindexes.each).using { lindex ⇒
       val lin         = lindex.lin
       val index       = lindex.index
       val speed       = lin.speed
@@ -68,7 +46,14 @@ case class Row(
   }
 
   def propagateLins: Row = {
-    flatmapLins(_.nextgen)
+    copy(
+      lindexes = (for {
+        lindex ← lindexes
+        lin    ← lindex.lin.nextgen
+      } yield {
+        lindex.copy(lin = lin)
+      })
+    )
   }
 
   def next: Row = {

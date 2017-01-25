@@ -1,11 +1,9 @@
-package my.will.be.done.linfinity
+package my.will.be.done.linfinity.cli
 
 import my.will.be.done.linfinity.model._
-import com.typesafe.config.ConfigFactory
-import configs.syntax._
 
 object CLInfinity extends App {
-  def display(row: Row): Unit = {
+  def display(row: Row, conf: Conf): Unit = {
     val lindexes = row.lindexes.groupBy(_.index).mapValues(_.map(_.lin))
     for {
       index ← 0 until row.width
@@ -23,11 +21,14 @@ object CLInfinity extends App {
     println
   }
 
-  val conf = ConfigFactory.load.get[Conf]("linfinity").value
-  for {
-    row ← Iterator.iterate(Row(conf))(_.next).takeWhile(_.lindexes.nonEmpty)
-  } {
-    display(row)
-    Thread.sleep(conf.rowDelay.toMillis)
+  OptionParser.parse(args, Conf) match {
+    case Some(conf) ⇒
+      for {
+        row ← Iterator.iterate(Row(conf))(_.next).takeWhile(_.lindexes.nonEmpty)
+      } {
+        display(row, conf)
+        Thread.sleep(conf.rowDelay.toMillis)
+      }
+    case None ⇒
   }
 }
