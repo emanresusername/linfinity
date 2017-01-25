@@ -16,11 +16,18 @@ object InlineStyles extends StyleSheet.Inline {
     mainPanelCommon,
     display.flex,
     flexDirection.column,
-    justifyContent.spaceAround
+    justifyContent.spaceAround,
+    borderTopLeftRadius(1.em),
+    borderBottomLeftRadius(1.em)
   )
 
   val rowsPanel = style(
-    mainPanelCommon
+    mainPanelCommon,
+    display.flex,
+    flexDirection.column,
+    justifyContent.center,
+    borderTopRightRadius(1.em),
+    borderBottomRightRadius(1.em)
   )
 
   val mainContainer = style(

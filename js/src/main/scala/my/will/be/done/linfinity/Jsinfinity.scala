@@ -1,7 +1,6 @@
 package my.will.be.done.linfinity
 
 import org.scalajs.dom.document
-import org.scalajs.dom.window.console
 import com.thoughtworks.binding.dom
 import com.thoughtworks.binding.Binding
 import com.thoughtworks.binding.Binding._
@@ -28,6 +27,7 @@ object Jsinfinity extends js.JSApp {
     val die            = Var(0.002)
     val mutate         = Var(0.0075)
     val rowHistory     = Var(25)
+    val isReversed     = Var(false)
   }
 
   def conf: Conf = {
@@ -101,6 +101,14 @@ object Jsinfinity extends js.JSApp {
     }
   }
 
+  @dom
+  def reverseDirectionInput: Binding[HTMLInputElement] = {
+    import Settings.isReversed
+    <input type="checkbox"
+        onchange={inputEventHandler(isReversed := _.checked)}
+      ></input>
+  }
+
   @dom def confPanel: Binding[Node] = {
     import Settings._
     <div class={InlineStyles.settingsContainer.htmlClass}>
@@ -147,6 +155,10 @@ object Jsinfinity extends js.JSApp {
       <div>
       <label>row history: </label>
       {intInputElem(Settings.rowHistory).bind}
+      </div>
+      <div>
+      <label>reverse direction: </label>
+      {reverseDirectionInput.bind}
       </div>
       </div>
   }
@@ -203,10 +215,34 @@ object Jsinfinity extends js.JSApp {
     )
   }
 
-  val nextRow = Var[Option[Row]](None)
+  val nextRow    = Var[Option[Row]](None)
   val rowHistory = Vars.empty[Row]
-  val isPaused  = Var(false)
-  val isStopped = Var(true)
+  val isPaused   = Var(false)
+  val isStopped  = Var(true)
+
+  def addToHistory(row: Row): Unit = {
+    val history = rowHistory.get
+    if (Settings.isReversed.get) {
+      history.+=:(row)
+    } else {
+      history += row
+    }
+  }
+
+  @dom
+  def trimHistory: Unit = {
+    val currentNumRows = rowHistory.length.bind
+    val allowedNumRows = Settings.rowHistory.bind
+    if (currentNumRows > allowedNumRows) {
+      val trimLength = currentNumRows - allowedNumRows
+      val rows       = rowHistory.get
+      if (Settings.isReversed.bind) {
+        rows.trimEnd(trimLength)
+      } else {
+        rows.trimStart(trimLength)
+      }
+    }
+  }
 
   def onRowInterval(): Unit = {
     for {
@@ -216,12 +252,8 @@ object Jsinfinity extends js.JSApp {
       if (row.lindexes.nonEmpty) {
         nextRow := Option(row.next)
         val rows = rowHistory.get
-        rows.+=:(row)
-        val currentNumRows = rows.length
-        val allowedNumRows = Settings.rowHistory.get
-        if (currentNumRows > allowedNumRows) {
-          rows.trimEnd(currentNumRows - allowedNumRows)
-        }
+        addToHistory(row)
+        trimHistory
       } else {
         isStopped := true
       }
@@ -263,12 +295,18 @@ object Jsinfinity extends js.JSApp {
       <div onclick={event: Event ⇒ restartRows}>
       {if (stopped) "Start" else "Restart"}
       </div>
-      <div onclick={event: Event ⇒ isPaused := !isPaused.get}>
-      {if (isPaused.bind) "Unpause" else "Pause"}
-      </div>
       {
         if(stopped) {
-          <!-- already stopped -->
+          <!-- stopped -->
+        } else {
+          <div onclick={event: Event ⇒ isPaused := !isPaused.get}>
+            {if (isPaused.bind) "Unpause" else "Pause"}
+          </div>
+        }
+      }
+      {
+        if(stopped) {
+          <!-- stopped -->
         } else {
           <div onclick={event: Event ⇒ stop}>
             Stop
@@ -305,7 +343,7 @@ object Jsinfinity extends js.JSApp {
         <!-- -->
       case Some(row) ⇒
         val lineages = row.lindexes.map(_.lin).groupBy(_.lineage)
-          <div>{
+        <div>{
             Constants(lineages.toSeq:_*).map {
               case (lineage, lins) ⇒
                 lineageStatus(lineage, lins).bind
