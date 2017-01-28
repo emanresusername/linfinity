@@ -18,7 +18,8 @@ object InlineStyles extends StyleSheet.Inline {
     flexDirection.column,
     justifyContent.spaceAround,
     borderTopLeftRadius(1.em),
-    borderBottomLeftRadius(1.em)
+    borderBottomLeftRadius(1.em),
+    width(30.vw)
   )
 
   val rowsPanel = style(
@@ -40,15 +41,25 @@ object InlineStyles extends StyleSheet.Inline {
     display.flex,
     flexDirection.column,
     justifyContent.spaceBetween,
-    alignItems.flexEnd
+    alignItems.flexEnd,
+    flex := "10"
+  )
+
+  val settingBorderRadius = style(
+    borderRadius(5.px, 15.px, 15.px, 5.px)
   )
 
   val setting = style(
-    paddingTop(1.pt)
+    marginTop(1.pt),
+    marginBottom(1.pt),
+    settingBorderRadius,
+    &.hover(
+      boxShadow := "2px 0 2px 1px rgba(0, 50, 100, 0.52)"
+    )
   )
 
   val settingInput = style(
-    borderRadius(5.px, 15.px, 15.px, 5.px),
+    settingBorderRadius,
     borderStyle.double,
     paddingLeft(1.ex)
   )
@@ -80,5 +91,20 @@ object InlineStyles extends StyleSheet.Inline {
     display.flex,
     justifyContent.spaceAround,
     flexWrap.wrap
+  )
+
+  val infoPanel = style(
+    flex := "1.5",
+    borderTopStyle.double,
+    borderTopColor(c"#aaf"),
+    borderTopWidth(2.px),
+    marginTop(4.px),
+    paddingTop(4.px),
+    overflowY.scroll
+  )
+
+  val lineages = style(
+    overflowY.scroll,
+    flex := "5"
   )
 }

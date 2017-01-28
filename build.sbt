@@ -2,7 +2,9 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.12.1",
   organization := "my.will.be.done.linfinity",
   licenses += ("GPL", url("https://www.gnu.org/licenses/gpl.txt")),
-  version := "0.2.0"
+  version := "0.2.0",
+  scalacOptions ++= Seq("-deprecation", "-feature"),
+  javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked")
 )
 
 val quicklensOrg     = "com.softwaremill.quicklens"

@@ -8,47 +8,17 @@ import org.scalajs.dom.raw.Node
 import scala.scalajs.js
 import org.scalajs.dom.html
 import my.will.be.done.linfinity.model._
+import my.will.be.done.linfinity.www.Setting._
 import my.will.be.done.linfinity.util.Duration
 import scala.scalajs.js.timers.{setInterval, clearInterval}
 import scala.concurrent.duration._
 import org.scalajs.dom.raw.{HTMLInputElement, Event}
 import scalacss.Defaults._
 import com.softwaremill.quicklens._
+import my.will.be.done.linfinity.www.Setting.conf
 
 object Jsinfinity extends js.JSApp {
   val ContainerId = "linfinity"
-  object Settings {
-    val width          = Var(Setting.Width.default)
-    val blankDisplay   = Var(Setting.BlankDisplay.default)
-    val collideDisplay = Var(Setting.CollideDisplay.default)
-    val initialNumLins = Var(Setting.InitialNumLins.default)
-    val rowDelay       = Var(Setting.RowDelay.default)
-    val linDisplays    = Var(Setting.LinDisplays.default)
-    val split          = Var(Setting.SplitChance.default)
-    val merge          = Var(Setting.MergeChance.default)
-    val die            = Var(Setting.DieChance.default)
-    val mutate         = Var(Setting.MutateChance.default)
-    val rowHistory     = Var(25)
-    val isReversed     = Var(false)
-  }
-
-  def conf: Conf = {
-    import Settings._
-    Conf(
-      width = width.get,
-      blankDisplay = blankDisplay.get,
-      collideDisplay = collideDisplay.get,
-      initialNumLins = initialNumLins.get,
-      rowDelay = rowDelay.get,
-      chances = Chances(
-        split = split.get,
-        merge = merge.get,
-        die = die.get,
-        mutate = mutate.get
-      ),
-      linDisplays = linDisplays.get
-    )
-  }
 
   @dom
   def inputElem[V](value: Var[V], deserializeValue: String ⇒ V, serializeValue: V ⇒ String = {
@@ -97,62 +67,80 @@ object Jsinfinity extends js.JSApp {
 
   @dom
   def reverseDirectionInput: Binding[HTMLInputElement] = {
-    import Settings.isReversed
+    import Setting.isReversed
     <input type="checkbox"
-        onchange={inputEventHandler(isReversed := _.checked)}
+    onchange={inputEventHandler(isReversed := _.checked)}
+    checked={isReversed.bind}
       ></input>
   }
 
+  @dom
+  def showDescriptionsInput: Binding[HTMLInputElement] = {
+    import Setting.showInfo
+    <input type="checkbox"
+    onchange={inputEventHandler{showInfo := _.checked}}
+    checked={showInfo.bind}
+      ></input>
+  }
+
+  def mouseoverInfo[V](setting: Setting[V]): Event ⇒ Unit = { event: Event ⇒
+    info := s"${setting.description.capitalize}. Default value: ${setting.default}"
+  }
+
   @dom def confPanel: Binding[Node] = {
-    import Settings._
+    import Setting._
     <div class={InlineStyles.settingsContainer.htmlClass}>
-      <div>
+      <div onmouseover={mouseoverInfo(width)}>
       <label>width: </label>
       {widthInputElem(width).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(blankDisplay)}>
       <label>blank character: </label>
       {charInputElem(blankDisplay).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(collideDisplay)}>
       <label>collide character: </label>
       {charInputElem(collideDisplay).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(initialNumLins)}>
       <label>initial number of lins: </label>
       {intInputElem(initialNumLins).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(rowDelay)}>
       <label>row delay: </label>
       {rowDelayInput.bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(split)}>
       <label>split chance: </label>
       {chanceInputElem(split).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(merge)}>
       <label>merge chance: </label>
       {chanceInputElem(merge).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(die)}>
       <label>die chance: </label>
       {chanceInputElem(die).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(mutate)}>
       <label>mutate chance: </label>
       {chanceInputElem(mutate).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(linDisplays)}>
       <label>lin characters: </label>
       {stringInputElem(linDisplays).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(Setting.rowHistory)}>
       <label>row history: </label>
-      {intInputElem(Settings.rowHistory).bind}
+      {intInputElem(Setting.rowHistory).bind}
       </div>
-      <div>
+      <div onmouseover={mouseoverInfo(isReversed)}>
       <label>reverse direction: </label>
       {reverseDirectionInput.bind}
+      </div>
+      <div onmouseover={mouseoverInfo(showInfo)}>
+      <label>show setting descriptions: </label>
+      {showDescriptionsInput.bind}
       </div>
       </div>
   }
@@ -178,11 +166,11 @@ object Jsinfinity extends js.JSApp {
                 }</span>
             case Some(more) if more.length > 1 ⇒
               <span>{
-                Settings.collideDisplay.bind.toString
+                Setting.collideDisplay.bind.toString
               }</span>
             case _ ⇒
               <span>{
-                Settings.blankDisplay.bind.toString
+                Setting.blankDisplay.bind.toString
               }</span>
           }
         }
@@ -213,10 +201,11 @@ object Jsinfinity extends js.JSApp {
   val rowHistory = Vars.empty[Row]
   val isPaused   = Var(false)
   val isStopped  = Var(true)
+  val info       = Var("")
 
   def addToHistory(row: Row): Unit = {
     val history = rowHistory.get
-    if (Settings.isReversed.get) {
+    if (Setting.isReversed.get) {
       history.+=:(row)
     } else {
       history += row
@@ -226,11 +215,11 @@ object Jsinfinity extends js.JSApp {
   @dom
   def trimHistory: Unit = {
     val currentNumRows = rowHistory.length.bind
-    val allowedNumRows = Settings.rowHistory.bind
+    val allowedNumRows = Setting.rowHistory.bind
     if (currentNumRows > allowedNumRows) {
       val trimLength = currentNumRows - allowedNumRows
       val rows       = rowHistory.get
-      if (Settings.isReversed.bind) {
+      if (Setting.isReversed.bind) {
         rows.trimEnd(trimLength)
       } else {
         rows.trimStart(trimLength)
@@ -256,13 +245,13 @@ object Jsinfinity extends js.JSApp {
 
   @dom
   def rowDelayInput: Binding[HTMLInputElement] = {
-    val rowDelay    = Settings.rowDelay.bind
+    val rowDelay    = Setting.rowDelay.bind
     val rowInterval = setInterval(rowDelay)(onRowInterval)
     val changeHandler = inputEventHandler { input ⇒
       val newDuration = Duration(input.value)
       if (newDuration != rowDelay) {
         clearInterval(rowInterval)
-        Settings.rowDelay := newDuration
+        Setting.rowDelay := newDuration
       }
     }
 
@@ -337,7 +326,7 @@ object Jsinfinity extends js.JSApp {
         <!-- -->
       case Some(row) ⇒
         val lineages = row.lindexes.map(_.lin).groupBy(_.lineage)
-        <div>{
+        <div class={InlineStyles.lineages.htmlClass}>{
             Constants(lineages.toSeq:_*).map {
               case (lineage, lins) ⇒
                 lineageStatus(lineage, lins).bind
@@ -362,6 +351,15 @@ object Jsinfinity extends js.JSApp {
   }
 
   @dom
+  def infoPanel: Binding[Node] = {
+    if (showInfo.bind) {
+      <div class={InlineStyles.infoPanel.htmlClass}>{info.bind}</div>
+    } else {
+      <!-- -->
+    }
+  }
+
+  @dom
   def render: Binding[Node] = {
     <div>
       <style>{InlineStyles.render[String]}</style>
@@ -371,6 +369,7 @@ object Jsinfinity extends js.JSApp {
       { statusPanel.bind }
       { confPanel.bind }
       { controlButtons.bind }
+      { infoPanel.bind }
       </div>
       { rowsPanel.bind }
       </div>
