@@ -12,7 +12,7 @@ import my.will.be.done.linfinity.www.Setting._
 import my.will.be.done.linfinity.util.Duration
 import scala.scalajs.js.timers.{setInterval, clearInterval}
 import scala.concurrent.duration._
-import org.scalajs.dom.raw.{HTMLInputElement, Event}
+import org.scalajs.dom.raw.{HTMLInputElement, Event, HTMLStyleElement}
 import scalacss.Defaults._
 import com.softwaremill.quicklens._
 import my.will.be.done.linfinity.www.Setting.conf
@@ -361,22 +361,21 @@ object Jsinfinity extends js.JSApp {
 
   @dom
   def render: Binding[Node] = {
-    <div>
-      <style>{InlineStyles.render[String]}</style>
-      <style>{StandaloneStyles.render[String]}</style>
-      <div class={InlineStyles.mainContainer.htmlClass}>
+    <div class={InlineStyles.mainContainer.htmlClass}>
       <div class={InlineStyles.confPanel.htmlClass}>
-      { statusPanel.bind }
-      { confPanel.bind }
-      { controlButtons.bind }
-      { infoPanel.bind }
+       { statusPanel.bind }
+       { confPanel.bind }
+       { controlButtons.bind }
+       { infoPanel.bind }
       </div>
       { rowsPanel.bind }
-      </div>
-      </div>
+    </div>
   }
 
   def main(): Unit = {
+    val head = document.head
+    head.appendChild(InlineStyles.render[HTMLStyleElement])
+    head.appendChild(StandaloneStyles.render[HTMLStyleElement])
     dom.render(document.getElementById(ContainerId), render)
   }
 }
