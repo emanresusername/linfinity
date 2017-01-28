@@ -1,25 +1,22 @@
 package my.will.be.done.linfinity.www
 
+import scala.scalajs.js.annotation.JSExport
 import org.scalajs.dom.document
 import com.thoughtworks.binding.dom
 import com.thoughtworks.binding.Binding
 import com.thoughtworks.binding.Binding._
 import org.scalajs.dom.raw.Node
-import scala.scalajs.js
 import org.scalajs.dom.html
 import my.will.be.done.linfinity.model._
 import my.will.be.done.linfinity.www.Setting._
 import my.will.be.done.linfinity.util.Duration
 import scala.scalajs.js.timers.{setInterval, clearInterval}
 import scala.concurrent.duration._
-import org.scalajs.dom.raw.{HTMLInputElement, Event, HTMLStyleElement}
-import scalacss.Defaults._
+import org.scalajs.dom.raw.{HTMLInputElement, Event}
 import com.softwaremill.quicklens._
 import my.will.be.done.linfinity.www.Setting.conf
 
-object Jsinfinity extends js.JSApp {
-  val ContainerId = "linfinity"
-
+trait Ui {
   @dom
   def inputElem[V](value: Var[V], deserializeValue: String ⇒ V, serializeValue: V ⇒ String = {
     v: V ⇒
@@ -371,11 +368,12 @@ object Jsinfinity extends js.JSApp {
       { rowsPanel.bind }
     </div>
   }
+}
 
-  def main(): Unit = {
-    val head = document.head
-    head.appendChild(InlineStyles.render[HTMLStyleElement])
-    head.appendChild(StandaloneStyles.render[HTMLStyleElement])
-    dom.render(document.getElementById(ContainerId), render)
+@JSExport
+object Ui extends Ui {
+  def apply(uiContainer: Node, stylesContainer: Node = document.head): Unit = {
+    css.render(stylesContainer)
+    dom.render(uiContainer, render)
   }
 }

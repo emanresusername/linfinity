@@ -9,9 +9,8 @@ lazy val commonSettings = Seq(
 
 val quicklensOrg     = "com.softwaremill.quicklens"
 val quicklensVersion = "1.4.8"
-lazy val core = (crossProject.crossType(CrossType.Pure) in file("core"))
+lazy val core = crossProject.crossType(CrossType.Pure)
   .settings(commonSettings: _*)
-  .settings(name := "core")
   .jsSettings(
     libraryDependencies ++= {
       Seq(
@@ -30,10 +29,9 @@ lazy val core = (crossProject.crossType(CrossType.Pure) in file("core"))
 lazy val coreJvm = core.jvm
 lazy val coreJs  = core.js
 
-lazy val cli = (project in file("cli"))
+lazy val cli = project
   .settings(commonSettings: _*)
   .settings(
-    name := "cli",
     libraryDependencies ++= {
 
       Seq(
@@ -47,12 +45,9 @@ lazy val cli = (project in file("cli"))
   .enablePlugins(BuildInfoPlugin)
   .dependsOn(coreJvm)
 
-lazy val www = (project in file("www"))
+lazy val www = project
   .settings(commonSettings: _*)
   .settings(
-    name := "js",
-    persistLauncher := true,
-    persistLauncher in Test := false,
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     libraryDependencies ++= {
       val bindingVersion = "10.0.2"
@@ -63,5 +58,14 @@ lazy val www = (project in file("www"))
       )
     }
   )
-  .enablePlugins(ScalaJSPlugin, WorkbenchPlugin)
+  .enablePlugins(ScalaJSPlugin)
   .dependsOn(coreJs)
+
+lazy val jsapp = project
+  .settings(commonSettings: _*)
+  .settings(
+    persistLauncher := true,
+    persistLauncher in Test := false
+  )
+  .enablePlugins(WorkbenchPlugin)
+  .dependsOn(www)
