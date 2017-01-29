@@ -1,6 +1,6 @@
 package my.will.be.done.linfinity.model
 
-import Row.Lindex
+import Row.{Lindex, BlanksOrLindexs}
 import scala.util.Random
 import com.softwaremill.quicklens._
 
@@ -28,7 +28,7 @@ case class Row(
   }
 
   def collideLins: Row = {
-    val newLindexes = lindexes.groupBy(_.index).foldLeft(Seq.empty[Lindex]) {
+    val newLindexes = lindexMap.foldLeft(Seq.empty[Lindex]) {
       case (collided, (_, lindexGroup)) ⇒
         if (lindexGroup.length < 2) {
           collided ++ lindexGroup
@@ -59,9 +59,48 @@ case class Row(
   def next: Row = {
     bounceOutOfBoundsLins.moveLins.collideLins.propagateLins
   }
+
+  def lindexMap: Map[Int, Seq[Lindex]] = {
+    lindexes.groupBy(_.index)
+  }
+
+  def indexes: Range = {
+    0 until width
+  }
+
+  def chunks: Iterator[BlanksOrLindexs] = {
+    val map = lindexMap
+    Iterator
+      .iterate[((Int, Option[Seq[Lindex]]), Seq[Int])]((0, None) -> indexes) {
+        case (_, indexsToSpan) =>
+          val (blankIndexs, indexsAfterBlanks) = indexsToSpan.span(map.get(_).isEmpty)
+          val blankLength                      = blankIndexs.length
+          indexsAfterBlanks match {
+            case Seq(indexWithLins, remainingIndexs @ _ *) =>
+              ((blankLength, map.get(indexWithLins)), remainingIndexs)
+            case Nil =>
+              ((blankLength, None), Nil)
+          }
+      }
+      .drop(1)
+      .takeWhile {
+        case ((blankLength, _), remainingIndexs) =>
+          blankLength > 0 || remainingIndexs.nonEmpty
+      }
+      .flatMap {
+        case ((blankLength, lindexes), _) ⇒
+          (if (blankLength > 0) {
+             Seq(Left(blankLength))
+           } else {
+             Nil
+           }) ++ lindexes.map(Right(_))
+      }
+  }
 }
 
 object Row {
+  type BlanksOrLindexs = Either[Int, Seq[Lindex]]
+
   case class Lindex(
       lin: Lin,
       index: Int

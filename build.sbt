@@ -9,7 +9,8 @@ lazy val commonSettings = Seq(
 
 val quicklensOrg     = "com.softwaremill.quicklens"
 val quicklensVersion = "1.4.8"
-lazy val core = crossProject.crossType(CrossType.Pure)
+lazy val core = crossProject
+  .crossType(CrossType.Pure)
   .settings(commonSettings: _*)
   .jsSettings(
     libraryDependencies ++= {

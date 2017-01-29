@@ -152,24 +152,21 @@ trait Ui {
 
   @dom
   def display(row: Row): Binding[Node] = {
-    val lindexes = row.lindexes.groupBy(_.index).mapValues(_.map(_.lin))
     <div>{
-        Constants(0 until row.width:_*).map { index ⇒
-          lindexes.get(index) match {
-            case Some(one) if one.length == 1 ⇒
-              val lin = one.head
-                <span style={cssColor(lin)}>{
-                  lin.display.toString
-                }</span>
-            case Some(more) if more.length > 1 ⇒
-              <span>{
-                Setting.collideDisplay.bind.toString
+        Constants(row.chunks.toStream:_*).map {
+          case Right(one) if one.length == 1 ⇒
+            val lin = one.head.lin
+              <span style={cssColor(lin)}>{
+                lin.display.toString
               }</span>
-            case _ ⇒
-              <span>{
-                Setting.blankDisplay.bind.toString
-              }</span>
-          }
+          case Right(more) if more.length > 1 ⇒
+            <span>{
+              Setting.collideDisplay.bind.toString
+            }</span>
+          case Left(length) ⇒
+            <span>{
+              Setting.blankDisplay.bind.toString * length
+            }</span>
         }
       }</div>
   }
