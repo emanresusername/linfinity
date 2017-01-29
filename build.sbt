@@ -68,5 +68,47 @@ lazy val jsapp = project
     persistLauncher := true,
     persistLauncher in Test := false
   )
-  .enablePlugins(WorkbenchPlugin)
+  // TODO: conflicts with chrome plugin
+  // .enablePlugins(WorkbenchPlugin)
+  .enablePlugins(ScalaJSPlugin)
+  .dependsOn(www)
+
+import chrome._
+import chrome.permissions.Permission
+import chrome.permissions.Permission.API
+import net.lullabyte.{Chrome, ChromeSbtPlugin}
+
+lazy val webext = project
+  .settings(commonSettings: _*)
+  .settings(
+    persistLauncher := true,
+    persistLauncher in Test := false,
+    relativeSourceMaps := true,
+    skip in packageJSDependencies := false,
+    libraryDependencies ++= {
+      Seq(
+        "net.lullabyte" %%% "scala-js-chrome" % "0.4.0"
+      )
+    },
+    chromeManifest := new AppManifest {
+      val name    = "Linfinity"
+      val version = Keys.version.value
+      val app = App(
+        background = Background(
+          scripts = Chrome.defaultScripts
+        )
+      )
+      override val defaultLocale = Some("en")
+      override val icons = Chrome.icons(
+        "icons",
+        "linfinity.png",
+        Set(32, 64, 96, 128)
+      )
+      override val permissions = Set[Permission](
+        // TODO: persist settings
+        // API.Storage
+      )
+    }
+  )
+  .enablePlugins(ChromeSbtPlugin)
   .dependsOn(www)
