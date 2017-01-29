@@ -144,10 +144,7 @@ trait Ui {
 
   def cssColor(lin: Lin): String = {
     val color = lin.color
-    Seq(color.red, color.green, color.blue).foldLeft("color: #") {
-      case (string, value) ⇒
-        string ++ value.toHexString
-    }
+    s"color: rgb(${color.red}, ${color.green}, ${color.blue})"
   }
 
   @dom
