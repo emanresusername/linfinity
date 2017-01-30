@@ -1,7 +1,6 @@
 package my.will.be.done.linfinity.www
 
 import scala.scalajs.js.annotation.JSExport
-import org.scalajs.dom.document
 import com.thoughtworks.binding.dom
 import com.thoughtworks.binding.Binding
 import com.thoughtworks.binding.Binding._
@@ -63,21 +62,15 @@ trait Ui {
   }
 
   @dom
-  def reverseDirectionInput: Binding[HTMLInputElement] = {
-    import Setting.isReversed
-    <input type="checkbox"
-    onchange={inputEventHandler(isReversed := _.checked)}
-    checked={isReversed.bind}
+  def settingToggle(label: String, setting: Setting[Boolean]) = {
+    val settingVar = setting.value
+    <div onmouseover={mouseoverInfo(setting)}>
+      <label>{label}</label>
+      <input type="checkbox"
+    onchange={inputEventHandler(settingVar := _.checked)}
+    checked={settingVar.bind}
       ></input>
-  }
-
-  @dom
-  def showDescriptionsInput: Binding[HTMLInputElement] = {
-    import Setting.showInfo
-    <input type="checkbox"
-    onchange={inputEventHandler{showInfo := _.checked}}
-    checked={showInfo.bind}
-      ></input>
+      </div>
   }
 
   def mouseoverInfo[V](setting: Setting[V]): Event ⇒ Unit = { event: Event ⇒
@@ -87,6 +80,7 @@ trait Ui {
   @dom def confPanel: Binding[Node] = {
     import Setting._
     <div class={InlineStyles.settingsContainer.htmlClass}>
+      {settingToggle("show lineages", showLineages).bind}
       <div onmouseover={mouseoverInfo(width)}>
       <label>width: </label>
       {widthInputElem(width).bind}
@@ -131,14 +125,8 @@ trait Ui {
       <label>row history: </label>
       {intInputElem(Setting.rowHistory).bind}
       </div>
-      <div onmouseover={mouseoverInfo(isReversed)}>
-      <label>reverse direction: </label>
-      {reverseDirectionInput.bind}
-      </div>
-      <div onmouseover={mouseoverInfo(showInfo)}>
-      <label>show setting descriptions: </label>
-      {showDescriptionsInput.bind}
-      </div>
+      {settingToggle("reverse direction", reverseDirection).bind}
+      {settingToggle("show setting desciptions", showDescriptions).bind}
       </div>
   }
 
@@ -196,7 +184,7 @@ trait Ui {
 
   def addToHistory(row: Row): Unit = {
     val history = rowHistory.get
-    if (Setting.isReversed.get) {
+    if (Setting.reverseDirection.get) {
       history.+=:(row)
     } else {
       history += row
@@ -210,7 +198,7 @@ trait Ui {
     if (currentNumRows > allowedNumRows) {
       val trimLength = currentNumRows - allowedNumRows
       val rows       = rowHistory.get
-      if (Setting.isReversed.bind) {
+      if (Setting.reverseDirection.bind) {
         rows.trimEnd(trimLength)
       } else {
         rows.trimStart(trimLength)
@@ -311,19 +299,37 @@ trait Ui {
   }
 
   @dom
-  def statusPanel: Binding[Node] = {
-    nextRow.bind match {
-      case None ⇒
-        <!-- -->
-      case Some(row) ⇒
-        val lineages = row.lindexes.map(_.lin).groupBy(_.lineage)
-        <div class={InlineStyles.lineages.htmlClass}>{
-            Constants(lineages.toSeq:_*).map {
-              case (lineage, lins) ⇒
-                lineageStatus(lineage, lins).bind
+  def statusPanel = {
+    <div class={InlineStyles.statusPanel.htmlClass}>
+      <div class={InlineStyles.controlButtons.htmlClass}>
+        <div onclick={event: Event ⇒
+          nextRow := (for {
+            row ← nextRow.get
+          } yield {
+            val lindexes = for {
+              (lindex, index) ← row.lindexes.zipWithIndex
+            } yield {
+              lindex.modify(_.lin.lineage).setTo(index)
             }
-          }</div>
-    }
+            row.modify(_.lindexes).setTo(lindexes)
+          })
+        }>Reset Lineages</div>
+      </div>
+      {
+        nextRow.bind match {
+          case Some(row) ⇒
+            val lineages = row.lindexes.map(_.lin).groupBy(_.lineage)
+              <div class={InlineStyles.lineages.htmlClass}> {
+                Constants(lineages.toSeq:_*).map {
+                  case (lineage, lins) ⇒
+                    lineageStatus(lineage, lins).bind
+                }
+              } </div>
+          case None ⇒
+            <!-- -->
+        }
+      }
+    </div>
   }
 
   @dom
@@ -343,7 +349,7 @@ trait Ui {
 
   @dom
   def infoPanel: Binding[Node] = {
-    if (showInfo.bind) {
+    if (showDescriptions.bind) {
       <div class={InlineStyles.infoPanel.htmlClass}>{info.bind}</div>
     } else {
       <!-- -->
@@ -354,11 +360,17 @@ trait Ui {
   def render: Binding[Node] = {
     <div class={InlineStyles.mainContainer.htmlClass}>
       <div class={InlineStyles.confPanel.htmlClass}>
-       { statusPanel.bind }
        { confPanel.bind }
        { controlButtons.bind }
        { infoPanel.bind }
       </div>
+      {
+        if(showLineages.bind && !isStopped.bind) {
+          statusPanel.bind
+        } else {
+          <!-- -->
+        }
+      }
       { rowsPanel.bind }
     </div>
   }
@@ -366,7 +378,7 @@ trait Ui {
 
 @JSExport
 object Ui extends Ui {
-  def apply(uiContainer: Node, stylesContainer: Node = document.head): Unit = {
+  def apply(uiContainer: Node, stylesContainer: Node): Unit = {
     css.render(stylesContainer)
     dom.render(uiContainer, render)
   }

@@ -19,7 +19,19 @@ object InlineStyles extends StyleSheet.Inline {
     justifyContent.spaceAround,
     borderTopLeftRadius(1.em),
     borderBottomLeftRadius(1.em),
-    width(30.vw)
+    flex := "2",
+    maxWidth(35.vw)
+  )
+
+  val statusPanel = style(
+    mainPanelCommon,
+    overflowY.scroll,
+    flex := "1"
+  )
+
+  val lineages = style(
+    marginTop(1.em),
+    paddingTop(1.em)
   )
 
   val rowsPanel = style(
@@ -28,7 +40,8 @@ object InlineStyles extends StyleSheet.Inline {
     flexDirection.column,
     justifyContent.center,
     borderTopRightRadius(1.em),
-    borderBottomRightRadius(1.em)
+    borderBottomRightRadius(1.em),
+    flex := "0 10 auto"
   )
 
   val mainContainer = style(
@@ -41,7 +54,7 @@ object InlineStyles extends StyleSheet.Inline {
     display.flex,
     flexDirection.column,
     justifyContent.spaceBetween,
-    alignItems.flexEnd,
+    alignItems.center,
     flex := "10"
   )
 
@@ -81,6 +94,7 @@ object InlineStyles extends StyleSheet.Inline {
     cursor.pointer,
     borderColor.lightgray,
     borderWidth(2.pt),
+    textAlign.center,
     &.hover(
       borderStyle.outset,
       backgroundColor(c"#ddd")
@@ -100,11 +114,7 @@ object InlineStyles extends StyleSheet.Inline {
     borderTopWidth(2.px),
     marginTop(4.px),
     paddingTop(4.px),
-    overflowY.scroll
-  )
-
-  val lineages = style(
     overflowY.scroll,
-    flex := "5"
+    textAlign.center
   )
 }

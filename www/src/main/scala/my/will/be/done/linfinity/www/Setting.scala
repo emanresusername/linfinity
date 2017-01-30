@@ -21,19 +21,20 @@ object Setting {
     setting.value
   }
 
-  val width          = Setting(Width)
-  val blankDisplay   = Setting(BlankDisplay)
-  val collideDisplay = Setting(CollideDisplay)
-  val initialNumLins = Setting(InitialNumLins)
-  val rowDelay       = Setting(RowDelay)
-  val linDisplays    = Setting(LinDisplays)
-  val split          = Setting(SplitChance)
-  val merge          = Setting(MergeChance)
-  val die            = Setting(DieChance)
-  val mutate         = Setting(MutateChance)
-  val rowHistory     = Setting(25, "how many rows will stay on screen")
-  val isReversed     = Setting(false, "false: top to bottom. true: bottom to top")
-  val showInfo       = Setting(true, "show explanations for the moused over settings")
+  val width            = Setting(Width)
+  val blankDisplay     = Setting(BlankDisplay)
+  val collideDisplay   = Setting(CollideDisplay)
+  val initialNumLins   = Setting(InitialNumLins)
+  val rowDelay         = Setting(RowDelay)
+  val linDisplays      = Setting(LinDisplays)
+  val split            = Setting(SplitChance)
+  val merge            = Setting(MergeChance)
+  val die              = Setting(DieChance)
+  val mutate           = Setting(MutateChance)
+  val rowHistory       = Setting(25, "how many rows will stay on screen")
+  val reverseDirection = Setting(false, "false: top to bottom. true: bottom to top")
+  val showDescriptions = Setting(true, "show explanations for the moused over settings")
+  val showLineages     = Setting(true, "show info on the currently living lineages")
 
   def conf: Conf = {
     Conf(
