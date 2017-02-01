@@ -12,7 +12,7 @@ object Setting {
       extends Setting('X', "the character that shows when 2 or more lins collide")
   case object InitialNumLins extends Setting(3, "the number of lins to (re)start the game with")
   case object RowDelay
-      extends Setting(100.millis,
+      extends Setting[Duration](100.millis,
                       "how long to pause between rows. the lower the duration the faster the game")
   case object SplitChance extends Setting(0.005d, "chance a lin will split in two on each row")
   case object MutateChance

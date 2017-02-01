@@ -1,13 +1,13 @@
 package my.will.be.done.linfinity.model
 
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration.Duration
 
 case class Conf(
     width: Int,
     blankDisplay: Char,
     collideDisplay: Char,
     initialNumLins: Int,
-    rowDelay: FiniteDuration,
+    rowDelay: Duration,
     chances: Chances,
     linDisplays: Seq[Char]
 )

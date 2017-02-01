@@ -1,9 +1,8 @@
 package my.will.be.done.linfinity
 
 import my.will.be.done.linfinity.model._, Setting._
-import my.will.be.done.linfinity.util.Duration
 import my.will.be.done.linfinity.cli.BuildInfo
-import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration.Duration
 import com.softwaremill.quicklens._
 
 package object cli {
@@ -23,9 +22,6 @@ package object cli {
     def validateChar(x: String): Either[String, Unit] = {
       if (x.length == 1) success else failure("must be a single character")
     }
-
-    implicit val durationRead: scopt.Read[FiniteDuration] =
-      scopt.Read.reads(Duration.apply)
 
     opt[Int]('w', "width")
       .action { (x, c) =>
@@ -49,7 +45,7 @@ package object cli {
         c.copy(initialNumLins = x)
       }
       .text(settingText(InitialNumLins))
-    opt[FiniteDuration]('r', "row-delay")
+    opt[Duration]('r', "row-delay")
       .action { (x, c) =>
         c.copy(rowDelay = x)
       }

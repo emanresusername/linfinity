@@ -8,7 +8,6 @@ import org.scalajs.dom.raw.Node
 import org.scalajs.dom.html
 import my.will.be.done.linfinity.model._
 import my.will.be.done.linfinity.www.Setting._
-import my.will.be.done.linfinity.util.Duration
 import scala.scalajs.js.timers.{setInterval, clearInterval}
 import scala.concurrent.duration._
 import org.scalajs.dom.raw.{HTMLInputElement, Event}
@@ -225,7 +224,7 @@ trait Ui {
   @dom
   def rowDelayInput: Binding[HTMLInputElement] = {
     val rowDelay    = Setting.rowDelay.bind
-    val rowInterval = setInterval(rowDelay)(onRowInterval)
+    val rowInterval = setInterval(rowDelay.toMillis)(onRowInterval)
     val changeHandler = inputEventHandler { input ⇒
       val newDuration = Duration(input.value)
       if (newDuration != rowDelay) {
