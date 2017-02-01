@@ -19,26 +19,29 @@ package object cli {
       s"${setting.description}. Defaults to ${setting.default}"
     }
 
-    def validateChar(x: String): Either[String, Unit] = {
-      if (x.length == 1) success else failure("must be a single character")
-    }
+    implicit val charRead: scopt.Read[Char] =
+      scopt.Read.reads {
+        _.getBytes match {
+          case Array(char) => char.toChar
+          case s =>
+            throw new IllegalArgumentException("'" + s + "' is not a char.")
+        }
+      }
 
     opt[Int]('w', "width")
       .action { (x, c) =>
         c.copy(width = x)
       }
       .text(settingText(Width))
-    opt[String]('b', "blank-display")
+    opt[Char]('b', "blank-display")
       .action { (x, c) =>
-        c.copy(blankDisplay = x.head)
+        c.copy(blankDisplay = x)
       }
-      .validate(validateChar)
       .text(settingText(BlankDisplay))
-    opt[String]('c', "collide-display")
+    opt[Char]('c', "collide-display")
       .action { (x, c) =>
-        c.copy(collideDisplay = x.head)
+        c.copy(collideDisplay = x)
       }
-      .validate(validateChar)
       .text(settingText(CollideDisplay))
     opt[Int]('i', "initial-num-lins")
       .action { (x, c) =>
