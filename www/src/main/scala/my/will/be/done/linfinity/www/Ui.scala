@@ -12,7 +12,6 @@ import scala.scalajs.js.timers.{setInterval, clearInterval}
 import scala.concurrent.duration._
 import org.scalajs.dom.raw.{HTMLInputElement, Event}
 import com.softwaremill.quicklens._
-import my.will.be.done.linfinity.www.Setting.conf
 
 trait Ui {
   @dom
@@ -62,7 +61,7 @@ trait Ui {
 
   @dom
   def settingToggle(label: String, setting: Setting[Boolean]) = {
-    val settingVar = setting.value
+    val settingVar = setting.variable
     <div onmouseover={mouseoverInfo(setting)}>
       <label>{label}</label>
       <input type="checkbox"
@@ -77,55 +76,54 @@ trait Ui {
   }
 
   @dom def confPanel: Binding[Node] = {
-    import Setting._
     <div class={InlineStyles.settingsContainer.htmlClass}>
-      {settingToggle("show lineages", showLineages).bind}
-      <div onmouseover={mouseoverInfo(width)}>
+      {settingToggle("show lineages", ShowLineages).bind}
+      <div onmouseover={mouseoverInfo(Width)}>
       <label>width: </label>
-      {widthInputElem(width).bind}
+      {widthInputElem(Width).bind}
       </div>
-      <div onmouseover={mouseoverInfo(blankDisplay)}>
+      <div onmouseover={mouseoverInfo(BlankDisplay)}>
       <label>blank character: </label>
-      {charInputElem(blankDisplay).bind}
+      {charInputElem(BlankDisplay).bind}
       </div>
-      <div onmouseover={mouseoverInfo(collideDisplay)}>
+      <div onmouseover={mouseoverInfo(CollideDisplay)}>
       <label>collide character: </label>
-      {charInputElem(collideDisplay).bind}
+      {charInputElem(CollideDisplay).bind}
       </div>
-      <div onmouseover={mouseoverInfo(initialNumLins)}>
+      <div onmouseover={mouseoverInfo(InitialNumLins)}>
       <label>initial number of lins: </label>
-      {intInputElem(initialNumLins).bind}
+      {intInputElem(InitialNumLins).bind}
       </div>
-      <div onmouseover={mouseoverInfo(rowDelay)}>
+      <div onmouseover={mouseoverInfo(RowDelay)}>
       <label>row delay: </label>
       {rowDelayInput.bind}
       </div>
-      <div onmouseover={mouseoverInfo(split)}>
+      <div onmouseover={mouseoverInfo(Split)}>
       <label>split chance: </label>
-      {chanceInputElem(split).bind}
+      {chanceInputElem(Split).bind}
       </div>
-      <div onmouseover={mouseoverInfo(merge)}>
+      <div onmouseover={mouseoverInfo(Merge)}>
       <label>merge chance: </label>
-      {chanceInputElem(merge).bind}
+      {chanceInputElem(Merge).bind}
       </div>
-      <div onmouseover={mouseoverInfo(die)}>
+      <div onmouseover={mouseoverInfo(Die)}>
       <label>die chance: </label>
-      {chanceInputElem(die).bind}
+      {chanceInputElem(Die).bind}
       </div>
-      <div onmouseover={mouseoverInfo(mutate)}>
+      <div onmouseover={mouseoverInfo(Mutate)}>
       <label>mutate chance: </label>
-      {chanceInputElem(mutate).bind}
+      {chanceInputElem(Mutate).bind}
       </div>
-      <div onmouseover={mouseoverInfo(linDisplays)}>
+      <div onmouseover={mouseoverInfo(LinDisplays)}>
       <label>lin characters: </label>
-      {stringInputElem(linDisplays).bind}
+      {stringInputElem(LinDisplays).bind}
       </div>
-      <div onmouseover={mouseoverInfo(Setting.rowHistory)}>
+      <div onmouseover={mouseoverInfo(RowHistory)}>
       <label>row history: </label>
-      {intInputElem(Setting.rowHistory).bind}
+      {intInputElem(RowHistory).bind}
       </div>
-      {settingToggle("reverse direction", reverseDirection).bind}
-      {settingToggle("show setting desciptions", showDescriptions).bind}
+      {settingToggle("reverse direction", ReverseDirection).bind}
+      {settingToggle("show setting desciptions", ShowDescriptions).bind}
       </div>
   }
 
@@ -145,11 +143,11 @@ trait Ui {
               }</span>
           case Right(more) if more.length > 1 ⇒
             <span>{
-              Setting.collideDisplay.bind.toString
+              CollideDisplay.bind.toString
             }</span>
           case Left(length) ⇒
             <span>{
-              Setting.blankDisplay.bind.toString * length
+              BlankDisplay.bind.toString * length
             }</span>
         }
       }</div>
@@ -183,7 +181,7 @@ trait Ui {
 
   def addToHistory(row: Row): Unit = {
     val history = rowHistory.get
-    if (Setting.reverseDirection.get) {
+    if (ReverseDirection.get) {
       history.+=:(row)
     } else {
       history += row
@@ -193,11 +191,11 @@ trait Ui {
   @dom
   def trimHistory: Unit = {
     val currentNumRows = rowHistory.length.bind
-    val allowedNumRows = Setting.rowHistory.bind
+    val allowedNumRows = RowHistory.bind
     if (currentNumRows > allowedNumRows) {
       val trimLength = currentNumRows - allowedNumRows
       val rows       = rowHistory.get
-      if (Setting.reverseDirection.bind) {
+      if (ReverseDirection.bind) {
         rows.trimEnd(trimLength)
       } else {
         rows.trimStart(trimLength)
@@ -223,13 +221,13 @@ trait Ui {
 
   @dom
   def rowDelayInput: Binding[HTMLInputElement] = {
-    val rowDelay    = Setting.rowDelay.bind
+    val rowDelay    = RowDelay.bind
     val rowInterval = setInterval(rowDelay.toMillis)(onRowInterval)
     val changeHandler = inputEventHandler { input ⇒
       val newDuration = Duration(input.value)
       if (newDuration != rowDelay) {
         clearInterval(rowInterval)
-        Setting.rowDelay := newDuration
+        RowDelay := newDuration
       }
     }
 
@@ -348,7 +346,7 @@ trait Ui {
 
   @dom
   def infoPanel: Binding[Node] = {
-    if (showDescriptions.bind) {
+    if (ShowDescriptions.bind) {
       <div class={InlineStyles.infoPanel.htmlClass}>{info.bind}</div>
     } else {
       <!-- -->
@@ -364,7 +362,7 @@ trait Ui {
        { infoPanel.bind }
       </div>
       {
-        if(showLineages.bind && !isStopped.bind) {
+        if(ShowLineages.bind && !isStopped.bind) {
           statusPanel.bind
         } else {
           <!-- -->

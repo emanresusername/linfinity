@@ -6,8 +6,11 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import org.scalajs.dom.{window, document}
 import chrome.runtime.Runtime
+import scala.scalajs.js.timers.setInterval
+import scala.concurrent.duration._
 
 object Webextinfinity extends js.JSApp {
+  val SaveSettingsInterval = 10.seconds
   def createWindowOptions: CreateOptions = {
     val width  = 1000
     val height = 600
@@ -32,7 +35,14 @@ object Webextinfinity extends js.JSApp {
           Windows.create(createWindowOptions)
         }
       } else {
-        Ui(document.body, document.head)
+        Store.loadSettings.onComplete {
+          case attempt ⇒
+            attempt.failed.foreach { cause ⇒
+              println(s"failed to load settings: $cause")
+            }
+            Ui(document.body, document.head)
+            setInterval(SaveSettingsInterval)(Store.saveSettings)
+        }
       }
     }
   }

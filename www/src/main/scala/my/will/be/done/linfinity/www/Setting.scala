@@ -1,55 +1,60 @@
 package my.will.be.done.linfinity.www
 
-import my.will.be.done.linfinity.model.{Setting ⇒ SealedSetting, Chances, Conf}, SealedSetting._
+import my.will.be.done.linfinity.model.{Setting ⇒ SealedSetting, Chances, Conf}
 import com.thoughtworks.binding.Binding.Var
 import scala.language.implicitConversions
+import enumeratum._, EnumEntry._
 
-case class Setting[V](default: V, description: String, value: Var[V]) {
-  def get: V = value.get
+sealed class Setting[V](val default: V, val description: String)
+    extends EnumEntry
+    with Hyphencase {
+
+  def this(setting: SealedSetting[V]) = {
+    this(setting.default, setting.description)
+  }
+
+  val variable = Var(default)
+
+  def get: V = variable.get
 }
 
-object Setting {
-  def apply[V](setting: SealedSetting[V]): Setting[V] = {
-    Setting(setting.default, setting.description)
-  }
-
-  def apply[V](default: V, description: String): Setting[V] = {
-    Setting(default, description, Var(default))
-  }
-
+object Setting extends Enum[Setting[_]] {
   implicit def settingToVar[V](setting: Setting[V]): Var[V] = {
-    setting.value
+    setting.variable
   }
 
-  val width            = Setting(Width)
-  val blankDisplay     = Setting(BlankDisplay)
-  val collideDisplay   = Setting(CollideDisplay)
-  val initialNumLins   = Setting(InitialNumLins)
-  val rowDelay         = Setting(RowDelay)
-  val linDisplays      = Setting(LinDisplays)
-  val split            = Setting(SplitChance)
-  val merge            = Setting(MergeChance)
-  val die              = Setting(DieChance)
-  val mutate           = Setting(MutateChance)
-  val rowHistory       = Setting(25, "how many rows will stay on screen")
-  val reverseDirection = Setting(false, "false: top to bottom. true: bottom to top")
-  val showDescriptions = Setting(true, "show explanations for the moused over settings")
-  val showLineages     = Setting(true, "show info on the currently living lineages")
+  val values = findValues
+
+  case object Width            extends Setting(SealedSetting.Width)
+  case object BlankDisplay     extends Setting(SealedSetting.BlankDisplay)
+  case object CollideDisplay   extends Setting(SealedSetting.CollideDisplay)
+  case object InitialNumLins   extends Setting(SealedSetting.InitialNumLins)
+  case object RowDelay         extends Setting(SealedSetting.RowDelay)
+  case object LinDisplays      extends Setting(SealedSetting.LinDisplays)
+  case object Split            extends Setting(SealedSetting.SplitChance)
+  case object Merge            extends Setting(SealedSetting.MergeChance)
+  case object Die              extends Setting(SealedSetting.DieChance)
+  case object Mutate           extends Setting(SealedSetting.MutateChance)
+  case object RowHistory       extends Setting(25, "how many rows will stay on screen")
+  case object ReverseDirection extends Setting(false, "false: top to bottom. true: bottom to top")
+  case object ShowDescriptions
+      extends Setting(true, "show explanations for the moused over settings")
+  case object ShowLineages extends Setting(true, "show info on the currently living lineages")
 
   def conf: Conf = {
     Conf(
-      width = width.get,
-      blankDisplay = blankDisplay.get,
-      collideDisplay = collideDisplay.get,
-      initialNumLins = initialNumLins.get,
-      rowDelay = rowDelay.get,
+      width = Width.get,
+      blankDisplay = BlankDisplay.get,
+      collideDisplay = CollideDisplay.get,
+      initialNumLins = InitialNumLins.get,
+      rowDelay = RowDelay.get,
       chances = Chances(
-        split = split.get,
-        merge = merge.get,
-        die = die.get,
-        mutate = mutate.get
+        split = Split.get,
+        merge = Merge.get,
+        die = Die.get,
+        mutate = Mutate.get
       ),
-      linDisplays = linDisplays.get
+      linDisplays = LinDisplays.get
     )
   }
 }
