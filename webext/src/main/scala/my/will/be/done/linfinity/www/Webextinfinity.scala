@@ -1,34 +1,32 @@
 package my.will.be.done.linfinity.www
 
-import chrome.app.runtime.bindings.LaunchData
-import chrome.app.window.bindings.{BoundsSpecification, CreateWindowOptions}
-import chrome.app.window.Window
-import chrome.utils.ChromeApp
-import org.scalajs.dom.Event
+import chrome.windows.bindings.{ Window, CreateOptions }, Window.CreateType.PANEL
+import chrome.windows.Windows
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.js
+import org.scalajs.dom.document
 
-object SystemMonitor extends ChromeApp {
+object Webextinfinity extends js.JSApp {
+  def createWindowOptions: CreateOptions = {
+    val width        = 1000
+    val height       = 600
+    CreateOptions(
+      url = js.Array("html/linfinity.html"),
+      width = width,
+      height = height,
+      `type` = PANEL
+    )
+  }
 
-  override def onLaunched(launchData: LaunchData): Unit = {
-    val options = {
-      val width        = 1000
-      val height       = 600
-      val boundsBorder = 25
-      CreateWindowOptions(
-        id = "linfinity",
-        innerBounds = BoundsSpecification(
-          minWidth = width,
-          minHeight = height
-        ),
-        outerBounds = BoundsSpecification(
-          minWidth = width + boundsBorder,
-          minHeight = height + boundsBorder
-        )
-      )
-    }
-    Window.create("html/linfinity.html", options).foreach { window =>
-      window.contentWindow.onload = { e: Event ⇒
-        val document = window.contentWindow.document
+  def main(): Unit = {
+    for {
+      window ← Windows.getCurrent()
+    } {
+      if (window.id == 1) {
+        BrowserAction.onClicked.addListener { tab ⇒
+          Windows.create(createWindowOptions)
+        }
+      } else {
         Ui(document.body, document.head)
       }
     }

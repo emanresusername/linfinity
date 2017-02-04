@@ -90,14 +90,12 @@ lazy val webext = project
         "net.lullabyte" %%% "scala-js-chrome" % "0.4.0"
       )
     },
-    chromeManifest := new AppManifest {
-      val name    = "Linfinity"
-      val version = Keys.version.value
+    chromeManifest := new ExtensionManifest {
+      val name                 = "Linfinity"
+      val version              = Keys.version.value
       override val description = Some("To Linfinity! And Beyond!")
-      val app = App(
-        background = Background(
-          scripts = Chrome.defaultScripts
-        )
+      val background = Background(
+        scripts = Chrome.defaultScripts
       )
       override val defaultLocale = Some("en")
       override val icons = Chrome.icons(
@@ -105,6 +103,11 @@ lazy val webext = project
         "linfinity.png",
         Set(32, 64, 96, 128)
       )
+      override val browserAction = Option(
+        BrowserAction(
+          icon = icons,
+          title = Option(name)
+        ))
       override val permissions = Set[Permission](
         // TODO: persist settings
         // API.Storage
