@@ -93,6 +93,7 @@ lazy val webext = project
     chromeManifest := new AppManifest {
       val name    = "Linfinity"
       val version = Keys.version.value
+      override val description = Some("To Linfinity! And Beyond!")
       val app = App(
         background = Background(
           scripts = Chrome.defaultScripts
