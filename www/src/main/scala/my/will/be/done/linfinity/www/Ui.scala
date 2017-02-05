@@ -136,7 +136,7 @@ trait Ui {
 
   @dom
   def display(row: Row): Binding[Node] = {
-    <div>{
+    <div class={InlineStyles.row.htmlClass}>{
         Constants(row.chunks.toStream:_*).map {
           case Right(one) if one.length == 1 ⇒
             val lin = one.head.lin

@@ -44,6 +44,11 @@ object InlineStyles extends StyleSheet.Inline {
     flex := "0 10 auto"
   )
 
+  val row = style(
+    whiteSpace.pre,
+    fontFamily := "monospace"
+  )
+
   val mainContainer = style(
     display.flex,
     height(95.vh),
