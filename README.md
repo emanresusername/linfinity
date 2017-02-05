@@ -12,3 +12,7 @@
     T___________B__________
 
 ![linfinity.gif](https://bitbucket.org/repo/kabzjk/images/3063319259-linfinity.gif)
+
+# [CLI](/cli/readme.md)
+
+# [Webextension](/webext/readme.md)
