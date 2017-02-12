@@ -52,7 +52,7 @@ lazy val www = project
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     libraryDependencies ++= {
       val bindingVersion    = "10.0.2"
-      val enumeratumVersion = "1.5.6"
+      val enumeratumVersion = "1.5.7"
 
       Seq(
         "com.github.japgolly.scalacss" %%% "core"       % "0.5.1",
