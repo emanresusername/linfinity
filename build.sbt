@@ -1,17 +1,21 @@
 lazy val commonSettings = Seq(
-  scalaVersion := "2.12.1",
+  scalaVersion := "2.12.4",
   organization := "my.will.be.done.linfinity",
   licenses += ("GPL", url("https://www.gnu.org/licenses/gpl.txt")),
-  version := "0.2.1",
-  scalacOptions ++= Seq("-deprecation", "-feature"),
-  javacOptions ++= Seq("-Xlint:deprecation", "-Xlint:unchecked")
+  version := "0.3.0",
+  scalacOptions ++= Seq("-deprecation",
+                        "-feature"
+                        // TODO: https://github.com/scala/bug/issues/10448#issuecomment-350234124
+                        // "-Xlint"
+  ),
+  scalafmtOnCompile := true
 )
 
 val quicklensOrg     = "com.softwaremill.quicklens"
-val quicklensVersion = "1.4.8"
+val quicklensVersion = "1.4.11"
 lazy val core = crossProject
   .crossType(CrossType.Pure)
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .jsSettings(
     libraryDependencies ++= {
       Seq(
@@ -31,13 +35,13 @@ lazy val coreJvm = core.jvm
 lazy val coreJs  = core.js
 
 lazy val cli = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     libraryDependencies ++= {
 
       Seq(
-        "com.github.scopt" %% "scopt" % "3.5.0",
-        "com.lihaoyi"      %% "fansi" % "0.2.3"
+        "com.github.scopt" %% "scopt" % "3.7.0",
+        "com.lihaoyi"      %% "fansi" % "0.2.5"
       )
     },
     buildInfoKeys := Seq[BuildInfoKey](name, version, organization),
@@ -47,14 +51,14 @@ lazy val cli = project
   .dependsOn(coreJvm)
 
 lazy val www = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
     addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     libraryDependencies ++= {
-      val bindingVersion = "10.0.2"
+      val bindingVersion = "11.0.1"
 
       Seq(
-        "com.github.japgolly.scalacss" %%% "core" % "0.5.1",
+        "com.github.japgolly.scalacss" %%% "core" % "0.5.5",
         "com.thoughtworks.binding"     %%% "dom"  % bindingVersion
       )
     }
@@ -63,14 +67,13 @@ lazy val www = project
   .dependsOn(coreJs)
 
 lazy val jsapp = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
-    persistLauncher := true,
-    persistLauncher in Test := false
+    scalaJSUseMainModuleInitializer := true,
+    scalaJSUseMainModuleInitializer in Test := false,
+    workbenchStartMode := WorkbenchStartModes.Manual
   )
-  // TODO: conflicts with chrome plugin
-  // .enablePlugins(WorkbenchPlugin)
-  .enablePlugins(ScalaJSPlugin)
+  .enablePlugins(ScalaJSPlugin, WorkbenchPlugin)
   .dependsOn(www)
 
 import chrome._
@@ -79,15 +82,15 @@ import chrome.permissions.Permission.API
 import net.lullabyte.{Chrome, ChromeSbtPlugin}
 
 lazy val webext = project
-  .settings(commonSettings: _*)
+  .settings(commonSettings)
   .settings(
-    persistLauncher := true,
-    persistLauncher in Test := false,
+    scalaJSUseMainModuleInitializer := true,
+    scalaJSUseMainModuleInitializer in Test := false,
     relativeSourceMaps := true,
     skip in packageJSDependencies := false,
     libraryDependencies ++= {
       Seq(
-        "net.lullabyte" %%% "scala-js-chrome" % "0.4.0"
+        "net.lullabyte" %%% "scala-js-chrome" % "0.5.0"
       )
     },
     chromeManifest := new ExtensionManifest {
@@ -116,3 +119,7 @@ lazy val webext = project
   )
   .enablePlugins(ChromeSbtPlugin)
   .dependsOn(www)
+
+lazy val root = project
+  .in(file("."))
+  .aggregate(coreJs, coreJvm, cli, www, jsapp, webext)

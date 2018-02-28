@@ -1,7 +1,10 @@
+// https://github.com/lucidd/scala-js-chrome/issues/33
+resolvers += Resolver.url("veinhorn plugins-repo", url("https://dl.bintray.com/veinhorn/sbt-plugins"))(Resolver.ivyStylePatterns)
+
 Seq(
-  "com.geirsson"  % "sbt-scalafmt"      % "0.5.4",
-  "org.scala-js"  % "sbt-scalajs"       % "0.6.14",
-  "com.lihaoyi"   % "workbench"         % "0.3.0",
-  "com.eed3si9n"  % "sbt-buildinfo"     % "0.6.1",
-  "net.lullabyte" % "sbt-chrome-plugin" % "0.4.0"
+  "com.lucidchart" % "sbt-scalafmt" % "1.15",
+  "org.scala-js"  % "sbt-scalajs"       % "0.6.22",
+  "com.eed3si9n"  % "sbt-buildinfo"     % "0.8.0",
+  "net.lullabyte" % "sbt-chrome-plugin" % "0.5.8",
+  "com.lihaoyi" % "workbench" % "0.4.0"
 ).map(addSbtPlugin)

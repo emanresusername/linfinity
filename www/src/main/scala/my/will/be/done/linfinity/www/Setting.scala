@@ -1,11 +1,12 @@
 package my.will.be.done.linfinity.www
 
-import my.will.be.done.linfinity.model.{Setting ⇒ SealedSetting, Chances, Conf}, SealedSetting._
+import my.will.be.done.linfinity.model.{Setting ⇒ SealedSetting, Chances, Conf},
+SealedSetting._
 import com.thoughtworks.binding.Binding.Var
 import scala.language.implicitConversions
 
 case class Setting[V](default: V, description: String, value: Var[V]) {
-  def get: V = value.get
+  def get: V = value.value
 }
 
 object Setting {
@@ -21,20 +22,22 @@ object Setting {
     setting.value
   }
 
-  val width            = Setting(Width)
-  val blankDisplay     = Setting(BlankDisplay)
-  val collideDisplay   = Setting(CollideDisplay)
-  val initialNumLins   = Setting(InitialNumLins)
-  val rowDelay         = Setting(RowDelay)
-  val linDisplays      = Setting(LinDisplays)
-  val split            = Setting(SplitChance)
-  val merge            = Setting(MergeChance)
-  val die              = Setting(DieChance)
-  val mutate           = Setting(MutateChance)
-  val rowHistory       = Setting(25, "how many rows will stay on screen")
-  val reverseDirection = Setting(false, "false: top to bottom. true: bottom to top")
-  val showDescriptions = Setting(true, "show explanations for the moused over settings")
-  val showLineages     = Setting(true, "show info on the currently living lineages")
+  val width = Setting(Width)
+  val blankDisplay = Setting(BlankDisplay)
+  val collideDisplay = Setting(CollideDisplay)
+  val initialNumLins = Setting(InitialNumLins)
+  val rowDelay = Setting(RowDelay)
+  val linDisplays = Setting(LinDisplays)
+  val split = Setting(SplitChance)
+  val merge = Setting(MergeChance)
+  val die = Setting(DieChance)
+  val mutate = Setting(MutateChance)
+  val rowHistory = Setting(25, "how many rows will stay on screen")
+  val reverseDirection =
+    Setting(false, "false: top to bottom. true: bottom to top")
+  val showDescriptions =
+    Setting(true, "show explanations for the moused over settings")
+  val showLineages = Setting(true, "show info on the currently living lineages")
 
   def conf: Conf = {
     Conf(

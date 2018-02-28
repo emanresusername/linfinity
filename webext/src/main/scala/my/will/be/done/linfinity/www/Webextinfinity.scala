@@ -9,7 +9,7 @@ import chrome.runtime.Runtime
 
 object Webextinfinity extends js.JSApp {
   def createWindowOptions: CreateOptions = {
-    val width  = 1000
+    val width = 1000
     val height = 600
     val options = CreateOptions(
       url = js.Array("html/linfinity.html"),

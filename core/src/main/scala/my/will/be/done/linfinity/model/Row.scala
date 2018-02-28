@@ -14,11 +14,11 @@ case class Row(
 
   def bounceOutOfBoundsLins: Row = {
     this.modify(_.lindexes.each).using { lindex ⇒
-      val lin         = lindex.lin
-      val index       = lindex.index
-      val speed       = lin.speed
+      val lin = lindex.lin
+      val index = lindex.index
+      val speed = lin.speed
       val bounceRight = index <= 0 && speed < 0
-      val bounceLeft  = index >= width - 1 && speed > 0
+      val bounceLeft = index >= width - 1 && speed > 0
       if (bounceRight || bounceLeft) {
         lindex.copy(lin = lin.bounce)
       } else {
@@ -35,7 +35,7 @@ case class Row(
         } else {
           collided ++ (for {
             lindex ← lindexGroup
-            lin    ← lindex.lin.collide
+            lin ← lindex.lin.collide
           } yield {
             lindex.copy(lin = lin)
           })
@@ -49,7 +49,7 @@ case class Row(
     copy(
       lindexes = (for {
         lindex ← lindexes
-        lin    ← lindex.lin.nextgen
+        lin ← lindex.lin.nextgen
       } yield {
         lindex.copy(lin = lin)
       })
@@ -73,10 +73,11 @@ case class Row(
     Iterator
       .iterate[((Int, Option[Seq[Lindex]]), Seq[Int])]((0, None) -> indexes) {
         case (_, indexsToSpan) =>
-          val (blankIndexs, indexsAfterBlanks) = indexsToSpan.span(map.get(_).isEmpty)
-          val blankLength                      = blankIndexs.length
+          val (blankIndexs, indexsAfterBlanks) =
+            indexsToSpan.span(map.get(_).isEmpty)
+          val blankLength = blankIndexs.length
           indexsAfterBlanks match {
-            case Seq(indexWithLins, remainingIndexs @ _ *) =>
+            case Seq(indexWithLins, remainingIndexs @ _*) =>
               ((blankLength, map.get(indexWithLins)), remainingIndexs)
             case Nil =>
               ((blankLength, None), Nil)

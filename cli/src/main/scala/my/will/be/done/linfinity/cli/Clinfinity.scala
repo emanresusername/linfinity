@@ -9,10 +9,12 @@ object Clinfinity extends App {
     } {
       chunk match {
         case Right(Seq(one)) ⇒
-          val lin   = one.lin
+          val lin = one.lin
           val color = lin.color
-          print(fansi.Color.True(color.red, color.green, color.blue)(lin.display.toString))
-        case Right(Seq(_, _ *)) ⇒
+          print(
+            fansi.Color.True(color.red, color.green, color.blue)(
+              lin.display.toString))
+        case Right(Seq(_, _*)) ⇒
           print(conf.collideDisplay)
         case Left(length) ⇒
           print(conf.blankDisplay.toString * length)

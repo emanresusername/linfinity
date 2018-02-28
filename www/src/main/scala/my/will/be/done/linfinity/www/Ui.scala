@@ -1,6 +1,6 @@
 package my.will.be.done.linfinity.www
 
-import scala.scalajs.js.annotation.JSExport
+import scala.scalajs.js.annotation.JSExportTopLevel
 import com.thoughtworks.binding.dom
 import com.thoughtworks.binding.Binding
 import com.thoughtworks.binding.Binding._
@@ -16,14 +16,17 @@ import my.will.be.done.linfinity.www.Setting.conf
 
 trait Ui {
   @dom
-  def inputElem[V](value: Var[V], deserializeValue: String ⇒ V, serializeValue: V ⇒ String = {
-    v: V ⇒
-      v.toString
-  }, additionalHandling: HTMLInputElement ⇒ Unit = _ ⇒ Unit): Binding[HTMLInputElement] = {
+  def inputElem[V](value: Var[V],
+                   deserializeValue: String ⇒ V,
+                   serializeValue: V ⇒ String = { v: V ⇒
+                     v.toString
+                   },
+                   additionalHandling: HTMLInputElement ⇒ Unit = _ ⇒ Unit)
+    : Binding[HTMLInputElement] = {
     <input
     value={serializeValue(value.bind)}
     onchange={inputEventHandler { input ⇒
-                value := deserializeValue(input.value)
+                value value_= deserializeValue(input.value)
                 additionalHandling(input)
               } }
       ></input>
@@ -53,11 +56,12 @@ trait Ui {
     })
   }
 
-  def inputEventHandler(handler: HTMLInputElement ⇒ Unit): Event ⇒ Unit = { event: Event ⇒
-    event.currentTarget match {
-      case input: HTMLInputElement ⇒
-        handler(input)
-    }
+  def inputEventHandler(handler: HTMLInputElement ⇒ Unit): Event ⇒ Unit = {
+    event: Event ⇒
+      event.currentTarget match {
+        case input: HTMLInputElement ⇒
+          handler(input)
+      }
   }
 
   @dom
@@ -66,14 +70,14 @@ trait Ui {
     <div onmouseover={mouseoverInfo(setting)}>
       <label>{label}</label>
       <input type="checkbox"
-    onchange={inputEventHandler(settingVar := _.checked)}
+    onchange={inputEventHandler(settingVar value_= _.checked)}
     checked={settingVar.bind}
       ></input>
       </div>
   }
 
   def mouseoverInfo[V](setting: Setting[V]): Event ⇒ Unit = { event: Event ⇒
-    info := s"${setting.description.capitalize}. Default value: ${setting.default}"
+    info value_= s"${setting.description.capitalize}. Default value: ${setting.default}"
   }
 
   @dom def confPanel: Binding[Node] = {
@@ -156,9 +160,9 @@ trait Ui {
   }
 
   def updateLinChances: Unit = {
-    nextRow := (
+    nextRow value_= (
       for {
-        row ← nextRow.get
+        row ← nextRow.value
       } yield {
         row.modify(_.lindexes.each.lin.chances).setTo(conf.chances)
       }
@@ -166,23 +170,23 @@ trait Ui {
   }
 
   def updateRowWidth: Unit = {
-    nextRow := (
+    nextRow value_= (
       for {
-        row ← nextRow.get
+        row ← nextRow.value
       } yield {
         row.copy(width = conf.width)
       }
     )
   }
 
-  val nextRow    = Var[Option[Row]](None)
+  val nextRow = Var[Option[Row]](None)
   val rowHistory = Vars.empty[Row]
-  val isPaused   = Var(false)
-  val isStopped  = Var(true)
-  val info       = Var("")
+  val isPaused = Var(false)
+  val isStopped = Var(true)
+  val info = Var("")
 
   def addToHistory(row: Row): Unit = {
-    val history = rowHistory.get
+    val history = rowHistory.value
     if (Setting.reverseDirection.get) {
       history.+=:(row)
     } else {
@@ -196,7 +200,7 @@ trait Ui {
     val allowedNumRows = Setting.rowHistory.bind
     if (currentNumRows > allowedNumRows) {
       val trimLength = currentNumRows - allowedNumRows
-      val rows       = rowHistory.get
+      val rows = rowHistory.value
       if (Setting.reverseDirection.bind) {
         rows.trimEnd(trimLength)
       } else {
@@ -207,29 +211,29 @@ trait Ui {
 
   def onRowInterval(): Unit = {
     for {
-      row ← nextRow.get
-      if (!isPaused.get)
+      row ← nextRow.value
+      if (!isPaused.value)
     } {
       if (row.lindexes.nonEmpty) {
-        nextRow := Option(row.next)
-        val rows = rowHistory.get
+        nextRow value_= Option(row.next)
+        val rows = rowHistory.value
         addToHistory(row)
         trimHistory
       } else {
-        isStopped := true
+        isStopped value_= true
       }
     }
   }
 
   @dom
   def rowDelayInput: Binding[HTMLInputElement] = {
-    val rowDelay    = Setting.rowDelay.bind
+    val rowDelay = Setting.rowDelay.bind
     val rowInterval = setInterval(rowDelay.toMillis)(onRowInterval)
     val changeHandler = inputEventHandler { input ⇒
       val newDuration = Duration(input.value)
       if (newDuration != rowDelay) {
         clearInterval(rowInterval)
-        Setting.rowDelay := newDuration
+        Setting.rowDelay value_= newDuration
       }
     }
 
@@ -237,16 +241,16 @@ trait Ui {
   }
 
   def restartRows: Unit = {
-    rowHistory.get.clear
-    nextRow := Option(Row(conf))
-    isStopped := false
-    isPaused := false
+    rowHistory.value.clear
+    nextRow value_= Option(Row(conf))
+    isStopped value_= false
+    isPaused value_= false
   }
 
   def stop: Unit = {
-    isStopped := true
-    rowHistory.get.clear
-    nextRow := None
+    isStopped value_= true
+    rowHistory.value.clear
+    nextRow value_= None
   }
 
   @dom
@@ -260,7 +264,7 @@ trait Ui {
         if(stopped) {
           <!-- stopped -->
         } else {
-          <div onclick={event: Event ⇒ isPaused := !isPaused.get}>
+          <div onclick={event: Event ⇒ isPaused value_= !isPaused.value}>
             {if (isPaused.bind) "Unpause" else "Pause"}
           </div>
         }
@@ -302,8 +306,8 @@ trait Ui {
     <div class={InlineStyles.statusPanel.htmlClass}>
       <div class={InlineStyles.controlButtons.htmlClass}>
         <div onclick={event: Event ⇒
-          nextRow := (for {
-            row ← nextRow.get
+          nextRow value_= (for {
+            row ← nextRow.value
           } yield {
             val lindexes = for {
               (lindex, index) ← row.lindexes.zipWithIndex
@@ -375,7 +379,7 @@ trait Ui {
   }
 }
 
-@JSExport
+@JSExportTopLevel("Ui")
 object Ui extends Ui {
   def apply(uiContainer: Node, stylesContainer: Node): Unit = {
     css.render(stylesContainer)
