@@ -5,8 +5,8 @@ lazy val commonSettings = Seq(
   version := "0.3.0",
   scalacOptions ++= Seq("-deprecation",
                         "-feature"
-                        // TODO: https://github.com/scala/bug/issues/10448#issuecomment-350234124
-                        // "-Xlint"
+                          // TODO: https://github.com/scala/bug/issues/10448#issuecomment-350234124
+                          // "-Xlint"
   ),
   scalafmtOnCompile := true
 )
@@ -31,12 +31,16 @@ lazy val core = crossProject
     }
   )
 
+val Version = new {
+  val binding = "11.0.1"
+}
+
 lazy val coreJvm = core.jvm
 lazy val coreJs  = core.js
 
 lazy val cli = project
-  .settings(commonSettings)
   .settings(
+    commonSettings,
     libraryDependencies ++= {
 
       Seq(
@@ -50,16 +54,18 @@ lazy val cli = project
   .enablePlugins(BuildInfoPlugin)
   .dependsOn(coreJvm)
 
-lazy val www = project
-  .settings(commonSettings)
-  .settings(
-    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
-    libraryDependencies ++= {
-      val bindingVersion = "11.0.1"
+lazy val macroSettings = Seq(
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+)
 
+lazy val www = project
+  .settings(
+    commonSettings,
+    macroSettings,
+    libraryDependencies ++= {
       Seq(
         "com.github.japgolly.scalacss" %%% "core" % "0.5.5",
-        "com.thoughtworks.binding"     %%% "dom"  % bindingVersion
+        "com.thoughtworks.binding"     %%% "dom"  % Version.binding
       )
     }
   )
@@ -67,8 +73,8 @@ lazy val www = project
   .dependsOn(coreJs)
 
 lazy val jsapp = project
-  .settings(commonSettings)
   .settings(
+    commonSettings,
     scalaJSUseMainModuleInitializer := true,
     scalaJSUseMainModuleInitializer in Test := false,
     workbenchStartMode := WorkbenchStartModes.Manual
@@ -82,8 +88,8 @@ import chrome.permissions.Permission.API
 import net.lullabyte.{Chrome, ChromeSbtPlugin}
 
 lazy val webext = project
-  .settings(commonSettings)
   .settings(
+    commonSettings,
     scalaJSUseMainModuleInitializer := true,
     scalaJSUseMainModuleInitializer in Test := false,
     relativeSourceMaps := true,
@@ -120,6 +126,18 @@ lazy val webext = project
   .enablePlugins(ChromeSbtPlugin)
   .dependsOn(www)
 
+lazy val fx = project
+  .settings(
+    commonSettings,
+    macroSettings,
+    libraryDependencies ++= {
+      Seq(
+        "com.thoughtworks.binding" %% "fxml" % Version.binding,
+        "org.scala-lang.modules" %% "scala-xml" % "1.1.0"
+      )
+    }
+  )
+
 lazy val root = project
   .in(file("."))
-  .aggregate(coreJs, coreJvm, cli, www, jsapp, webext)
+  .aggregate(coreJs, coreJvm, cli, www, jsapp, webext, fx)
