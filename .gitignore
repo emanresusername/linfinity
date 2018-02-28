@@ -3,3 +3,4 @@
 .ensime_cache
 ensime.sbt
 target/
+/.sbt-hydra-history
